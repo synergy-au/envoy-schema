@@ -23,3 +23,6 @@ dev = [
     "types-python-dateutil",
     "types-tzlocal",
 ]
+
+[tool.setuptools.package-data]
+"envoy_schema" = ["py.typed"]
