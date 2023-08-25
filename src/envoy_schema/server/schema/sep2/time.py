@@ -1,6 +1,6 @@
 """Time resource related
 """
-from typing import Literal, Optional
+from typing import Optional
 
 from pydantic_xml import attr, element
 
@@ -10,7 +10,7 @@ from envoy_schema.server.schema.sep2.types import TimeOffsetType, TimeQualityTyp
 
 class TimeResponse(Resource, tag="Time"):
     # xsd
-    href: Literal["/tm"] = attr()
+    href: str = attr()
 
     currentTime: TimeType = element()
     dstEndTime: TimeType = element()
