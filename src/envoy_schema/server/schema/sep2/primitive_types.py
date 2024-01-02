@@ -1,3 +1,6 @@
+from pydantic.networks import AnyUrl
+
+
 class HexBinary8(str):
     @classmethod
     def __get_validators__(cls):
@@ -80,3 +83,21 @@ class HexBinary160(str):
         if len(v) > 40:
             raise ValueError("HexBinary160 max length of 40.")
         return cls(v)
+
+
+class UriWithoutHost(AnyUrl):
+    """Allows URIs without a host/scheme (i.e. - just a path like /edev/123)"""
+
+    # XSD anyURI type -
+    host_required = False
+
+    @staticmethod
+    def get_default_parts(parts):
+        return {"scheme": "https"}
+
+
+class UriFullyQualified(AnyUrl):
+    """Allows only strings that match a fully qualified URI (i.e. requires host/scheme)"""
+
+    # XSD anyURI type with a requirement of a HOST
+    host_required = True
