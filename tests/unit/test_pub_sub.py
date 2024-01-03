@@ -1,6 +1,5 @@
 import pytest
 
-from build.lib.envoy_schema.server.schema.sep2.end_device import AbstractDevice
 from envoy_schema.server.schema.sep2.identification import Resource
 from envoy_schema.server.schema.sep2.primitive_types import UriFullyQualified, UriWithoutHost
 from envoy_schema.server.schema.sep2.pub_sub import (
@@ -10,6 +9,7 @@ from envoy_schema.server.schema.sep2.pub_sub import (
     Subscription,
     SubscriptionEncoding,
 )
+from envoy_schema.server.schema.sep2.types import TOUType
 
 
 def test_subscription():
@@ -75,16 +75,177 @@ def test_notification():
     assert type(parsed_notif.subscriptionURI) == UriWithoutHost
 
 
-def test_notification_encode_abstract_device():
-    """Can AbstractDevice - a descendent of Resource be encoded in a notification?"""
+def test_notification_encode_resource_DERControlListResponse():
+    """tests whether the Resource element can encode various descendent Resources in a notification"""
 
     with open("tests/data/notification.xml", "r") as fp:
-        raw_xml = fp.read()
+        original_xml = fp.read()
 
-    notif: Notification = Notification.from_xml(raw_xml)
-    notif.resource = AbstractDevice.validate({"lFDI": "lfdi-123", "sFDI": "456", "href": "my-device-789"})
+    # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
+    # constructed pydantic xml model directly causes headaches)
+    # We will roundtrip that via XML to ensure all of our values are preserved
+    notif_dict = Notification.from_xml(original_xml).dict()
+    notif_dict["resource"] = {
+        "all_": 1,
+        "results": 1,
+        "type": "DERControlList",
+        "href": "/my/list",
+        "DERControl": [
+            {
+                "creationTime": 123,
+                "mRID": "abc",
+                "interval": {
+                    "start": 456,
+                    "duration": 789,
+                },
+                "DERControlBase_": {
+                    "opModImpLimW": {"value": 100, "multiplier": 1},
+                    "opModExpLimW": {"value": 200, "multiplier": 1},
+                    "opModGenLimW": {"value": 300, "multiplier": 1},
+                    "opModLoadLimW": {"value": 400, "multiplier": 1},
+                },
+            }
+        ],
+    }
 
-    xml_result = Notification.to_xml(notif, skip_empty=True).decode()
-    assert "lfdi-123" not in xml_result, "Only the Resource parts of the schema should encode"
-    assert "456" not in xml_result, "Only the Resource parts of the schema should encode"
-    assert 'href="my-device-789"' in xml_result
+    # Quick sanity check on the raw XML
+    updated_xml = Notification.validate(notif_dict).to_xml(skip_empty=True).decode()
+    assert 'xsi:type="DERControlList"' in updated_xml
+    assert 'href="/my/list"' in updated_xml
+    assert "<value>100</value>" in updated_xml
+
+    # Now return to the original type and see if everything is there
+    notif: Notification = Notification.from_xml(updated_xml)
+    assert notif.resource is not None
+    assert notif.resource.DERControl is not None
+    assert len(notif.resource.DERControl) == 1
+    assert notif.resource.DERControl[0].DERControlBase_.opModImpLimW.value == 100
+    assert notif.resource.DERControl[0].DERControlBase_.opModExpLimW.value == 200
+    assert notif.resource.DERControl[0].DERControlBase_.opModGenLimW.value == 300
+    assert notif.resource.DERControl[0].DERControlBase_.opModLoadLimW.value == 400
+
+
+def test_notification_encode_resource_DefaultDERControl():
+    """tests whether the Resource element can encode various descendent Resources in a notification"""
+
+    with open("tests/data/notification.xml", "r") as fp:
+        original_xml = fp.read()
+
+    # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
+    # constructed pydantic xml model directly causes headaches)
+    # We will roundtrip that via XML to ensure all of our values are preserved
+    notif_dict = Notification.from_xml(original_xml).dict()
+    notif_dict["resource"] = {
+        "type": "DefaultDERControl",
+        "creationTime": 123,
+        "mRID": "abc",
+        "interval": {
+            "start": 456,
+            "duration": 789,
+        },
+        "DERControlBase_": {
+            "opModImpLimW": {"value": 100, "multiplier": 1},
+            "opModExpLimW": {"value": 200, "multiplier": 1},
+            "opModGenLimW": {"value": 300, "multiplier": 1},
+            "opModLoadLimW": {"value": 400, "multiplier": 1},
+        },
+    }
+
+    # Quick sanity check on the raw XML
+    updated_xml = Notification.validate(notif_dict).to_xml(skip_empty=True).decode()
+    assert 'xsi:type="DefaultDERControl"' in updated_xml
+    assert "<value>100</value>" in updated_xml
+
+    # Now return to the original type and see if everything is there
+    notif: Notification = Notification.from_xml(updated_xml)
+    assert notif.resource is not None
+    assert notif.resource.DERControlBase_ is not None
+    assert notif.resource.DERControlBase_.opModImpLimW.value == 100
+    assert notif.resource.DERControlBase_.opModExpLimW.value == 200
+    assert notif.resource.DERControlBase_.opModGenLimW.value == 300
+    assert notif.resource.DERControlBase_.opModLoadLimW.value == 400
+
+
+def test_notification_encode_resource_TimeTariffIntervalListResponse():
+    """tests whether the Resource element can encode various descendent Resources in a notification"""
+
+    with open("tests/data/notification.xml", "r") as fp:
+        original_xml = fp.read()
+
+    # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
+    # constructed pydantic xml model directly causes headaches)
+    # We will roundtrip that via XML to ensure all of our values are preserved
+    notif_dict = Notification.from_xml(original_xml).dict()
+    notif_dict["resource"] = {
+        "all_": 1,
+        "results": 1,
+        "type": "TimeTariffIntervalList",
+        "href": "/my/list",
+        "TimeTariffInterval": [
+            {
+                "creationTime": 123,
+                "mRID": "abc",
+                "interval": {
+                    "start": 456,
+                    "duration": 789,
+                },
+                "touTier": TOUType.NOT_APPLICABLE,
+                "ConsumptionTariffIntervalListLink": {"all_": 1, "href": "/my/price/at/time/554433"},
+            }
+        ],
+    }
+
+    # Quick sanity check on the raw XML
+    updated_xml = Notification.validate(notif_dict).to_xml(skip_empty=True).decode()
+    assert 'xsi:type="TimeTariffIntervalList"' in updated_xml
+    assert 'href="/my/list"' in updated_xml
+    assert 'href="/my/price/at/time/554433"' in updated_xml
+
+    # Now return to the original type and see if everything is there
+    notif: Notification = Notification.from_xml(updated_xml)
+    assert notif.resource is not None
+    assert notif.resource.TimeTariffInterval is not None
+    assert len(notif.resource.TimeTariffInterval) == 1
+    assert notif.resource.TimeTariffInterval[0].ConsumptionTariffIntervalListLink.href == "/my/price/at/time/554433"
+
+
+def test_notification_encode_resource_EndDeviceListResponse():
+    """tests whether the Resource element can encode various descendent Resources in a notification"""
+
+    with open("tests/data/notification.xml", "r") as fp:
+        original_xml = fp.read()
+
+    # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
+    # constructed pydantic xml model directly causes headaches)
+    # We will roundtrip that via XML to ensure all of our values are preserved
+    notif_dict = Notification.from_xml(original_xml).dict()
+    notif_dict["resource"] = {
+        "all_": 1,
+        "results": 1,
+        "type": "EndDeviceListResponse",
+        "href": "/my/list",
+        "EndDevice": [
+            {
+                "lFDI": "lfdi-111",
+                "sFDI": 111,
+                "changedTime": 123,
+                "ConnectionPointLink": {"href": "/href/cp"},
+                "DERListLink": {"href": "/href/der"},
+            }
+        ],
+    }
+
+    # Quick sanity check on the raw XML
+    updated_xml = Notification.validate(notif_dict).to_xml(skip_empty=True).decode()
+    assert 'xsi:type="EndDeviceListResponse"' in updated_xml
+    assert 'href="/href/cp"' in updated_xml
+
+    # Now return to the original type and see if everything is there
+    notif: Notification = Notification.from_xml(updated_xml)
+    assert notif.resource is not None
+    assert notif.resource.EndDevice is not None
+    assert len(notif.resource.EndDevice) == 1
+    assert notif.resource.EndDevice[0].lFDI == "lfdi-111"
+    assert notif.resource.EndDevice[0].sFDI == 111
+    assert notif.resource.EndDevice[0].ConnectionPointLink.href == "/href/cp"
+    assert notif.resource.EndDevice[0].DERListLink.href == "/href/der"

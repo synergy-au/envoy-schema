@@ -79,7 +79,7 @@ class DERControlResponse(RandomizableEvent, tag="DERControl"):
 
 
 class DERControlListResponse(SubscribableList, tag="DERControlList"):
-    DERControl: Optional[list[DERControlResponse]] = element()
+    DERControl: list[DERControlResponse] = element()
 
 
 class DERProgramResponse(SubscribableIdentifiedObject, tag="DERProgram"):
@@ -108,7 +108,7 @@ class DemandResponseProgramResponse(IdentifiedObject, tag="DemandResponseProgram
 
 
 class DemandResponseProgramListResponse(Sep2List, tag="DemandResponseProgramList"):
-    DemandResponseProgram: Optional[list[DemandResponseProgramResponse]] = element()
+    DemandResponseProgram: list[DemandResponseProgramResponse] = element()
 
 
 class EndDeviceControlResponse(RandomizableEvent, tag="EndDeviceControl"):

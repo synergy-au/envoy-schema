@@ -1,7 +1,11 @@
 from pydantic_xml import BaseXmlModel
 from pydantic_xml.element import SearchMode
 
-nsmap = {"": "urn:ieee:std:2030.5:ns", "csipaus": "http://csipaus.org/ns"}
+nsmap = {
+    "": "urn:ieee:std:2030.5:ns",
+    "csipaus": "http://csipaus.org/ns",
+    "xsi": "http://www.w3.org/2001/XMLSchema-instance",
+}
 
 
 class BaseXmlModelWithNS(BaseXmlModel):

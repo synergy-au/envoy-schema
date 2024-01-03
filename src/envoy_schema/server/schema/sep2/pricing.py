@@ -5,7 +5,7 @@ from pydantic_xml import element
 from envoy_schema.server.schema.sep2.event import RandomizableEvent
 from envoy_schema.server.schema.sep2.identification import IdentifiedObject, Link
 from envoy_schema.server.schema.sep2.identification import List as SepList
-from envoy_schema.server.schema.sep2.identification import ListLink, Resource
+from envoy_schema.server.schema.sep2.identification import ListLink, Resource, SubscribableList
 from envoy_schema.server.schema.sep2.types import (
     ConsumptionBlockType,
     CurrencyCode,
@@ -64,16 +64,19 @@ class ConsumptionTariffIntervalResponse(Resource, tag="ConsumptionTariffInterval
 
 
 class TariffProfileListResponse(SepList, tag="TariffProfileList"):
-    TariffProfile: Optional[list[TariffProfileResponse]] = element()
+    TariffProfile: list[TariffProfileResponse] = element()
 
 
-class RateComponentListResponse(SepList, tag="RateComponentList"):
-    RateComponent: Optional[list[RateComponentResponse]] = element()
+class RateComponentListResponse(SubscribableList, tag="RateComponentList"):
+    """Worth noting that the standard describes RateComponentList as a standard list but it's an envoy
+    specific extension to support subscriptions via SubscribableList"""
+
+    RateComponent: list[RateComponentResponse] = element()
 
 
 class TimeTariffIntervalListResponse(SepList, tag="TimeTariffIntervalList"):
-    TimeTariffInterval: Optional[list[TimeTariffIntervalResponse]] = element()
+    TimeTariffInterval: list[TimeTariffIntervalResponse] = element()
 
 
 class ConsumptionTariffIntervalListResponse(SepList, tag="ConsumptionTariffIntervalList"):
-    ConsumptionTariffInterval: Optional[list[ConsumptionTariffIntervalResponse]] = element()
+    ConsumptionTariffInterval: list[ConsumptionTariffIntervalResponse] = element()
