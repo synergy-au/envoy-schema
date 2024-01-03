@@ -1,11 +1,14 @@
 from enum import IntEnum
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
+from envoy_schema.server.schema.sep2.der import DefaultDERControl, DERControlListResponse
+from envoy_schema.server.schema.sep2.end_device import EndDeviceListResponse
 from envoy_schema.server.schema.sep2.identification import List as Sep2List
 from envoy_schema.server.schema.sep2.identification import Resource
+from envoy_schema.server.schema.sep2.pricing import TimeTariffIntervalListResponse
 from envoy_schema.server.schema.sep2.primitive_types import UriFullyQualified, UriWithoutHost
 
 
@@ -51,7 +54,14 @@ class Notification(SubscriptionBase):
 
     # A resource is an addressable unit of information, either a collection (List) or instance of an object
     # (identifiedObject, or simply, Resource)
-    resource: Optional[Resource] = element(tag="Resource")
+    #
+    # NOTE - Resource must be the LAST type in the union - pydantic tries left to right looking for the first match
+    #
+    resource: Optional[
+        Union[
+            TimeTariffIntervalListResponse, DERControlListResponse, DefaultDERControl, EndDeviceListResponse, Resource
+        ]
+    ] = element(tag="Resource")
 
 
 class Condition(BaseXmlModelWithNS):
@@ -76,8 +86,8 @@ class Subscription(SubscriptionBase):
 
 class SubscriptionListResponse(Sep2List, tag="SubscriptionList"):
     pollRate: Optional[int] = attr()  # The default polling rate for this function set in seconds
-    subscriptions: Optional[list[Subscription]] = element(tag="Subscription")
+    subscriptions: list[Subscription] = element(tag="Subscription")
 
 
 class NotificationListResponse(Sep2List, tag="NotificationList"):
-    notifications: Optional[list[Notification]] = element(tag="Notification")
+    notifications: list[Notification] = element(tag="Notification")
