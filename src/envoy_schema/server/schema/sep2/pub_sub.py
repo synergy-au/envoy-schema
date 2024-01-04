@@ -139,6 +139,8 @@ class Notification(SubscriptionBase):
     # A resource is an addressable unit of information, either a collection (List) or instance of an object
     # (identifiedObject, or simply, Resource)
     #
+    # The xsi:type attribute will define how the entity is parsed
+    #
     # NOTE - Resource must define an xsi:type attribute otherwise it will parse to Resource - logic is handled
     #      - in the pydantic Discriminator function get_notification_resource_discriminator
     #
@@ -183,8 +185,8 @@ class Subscription(SubscriptionBase):
 
 class SubscriptionListResponse(Sep2List, tag="SubscriptionList"):
     pollRate: Optional[int] = attr(default=None)  # The default polling rate for this function set in seconds
-    subscriptions: list[Subscription] = element(tag="Subscription")
+    subscriptions: Optional[list[Subscription]] = element(tag="Subscription", default=None)
 
 
 class NotificationListResponse(Sep2List, tag="NotificationList"):
-    notifications: list[Notification] = element(tag="Notification")
+    notifications: Optional[list[Notification]] = element(tag="Notification", default=None)

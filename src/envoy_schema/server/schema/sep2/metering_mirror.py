@@ -51,7 +51,7 @@ class MirrorMeterReadingListRequest(Resource, tag="MirrorMeterReadingList"):
 
 
 class MirrorUsagePointListResponse(Sep2List, tag="MirrorUsagePointList"):
-    mirrorUsagePoints: list[MirrorUsagePoint] = element(tag="MirrorUsagePoint")
+    mirrorUsagePoints: list[MirrorUsagePoint] = element(tag="MirrorUsagePoint", default_factory=list)
 
 
 class MirrorUsagePointRequest(MirrorUsagePoint, tag="MirrorUsagePoint"):

@@ -117,7 +117,7 @@ class DERProgramResponse(SubscribableIdentifiedObject, tag="DERProgram"):
 
 
 class DERProgramListResponse(SubscribableList, tag="DERProgramList"):
-    DERProgram: list[DERProgramResponse] = element()
+    DERProgram: Optional[list[DERProgramResponse]] = element(default=None)
     pollRate: Optional[int] = element(
         default=None
     )  # The default polling rate for this resource and all resources below in seconds
@@ -134,7 +134,7 @@ class DemandResponseProgramResponse(IdentifiedObject, tag="DemandResponseProgram
 
 
 class DemandResponseProgramListResponse(Sep2List, tag="DemandResponseProgramList"):
-    DemandResponseProgram: list[DemandResponseProgramResponse] = element()
+    DemandResponseProgram: list[DemandResponseProgramResponse] = element(default_factory=list)
 
 
 class EndDeviceControlResponse(RandomizableEvent, tag="EndDeviceControl"):
