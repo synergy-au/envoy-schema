@@ -70,31 +70,10 @@ def test_notification_xml_reading():
     parsed_notif: Notification = Notification.from_xml(raw_xml)
 
     assert parsed_notif.subscribedResource == "/upt/0/mr/4/r"
-    assert parsed_notif.resources is not None
-    assert len(parsed_notif.resources) == 1
-    assert parsed_notif.resources[0].value == 1001
-    assert parsed_notif.resources[0].timePeriod.start == 12987364
-    assert parsed_notif.resources[0].timePeriod.duration == 0
-    assert parsed_notif.status == NotificationStatus.DEFAULT
-    assert parsed_notif.subscriptionURI == "/edev/8/sub/5"
-
-
-def test_notification_xml_reading_multiple():
-    """Simple validation to ensure we can read basic XML"""
-    with open("tests/data/notification_multiple_reading.xml", "r") as fp:
-        raw_xml = fp.read()
-
-    parsed_notif: Notification = Notification.from_xml(raw_xml)
-
-    assert parsed_notif.subscribedResource == "/upt/0/mr/4/r"
-    assert parsed_notif.resources is not None
-    assert len(parsed_notif.resources) == 2
-    assert parsed_notif.resources[0].value == 1001
-    assert parsed_notif.resources[0].timePeriod.start == 12987364
-    assert parsed_notif.resources[0].timePeriod.duration == 0
-    assert parsed_notif.resources[1].value == 2002
-    assert parsed_notif.resources[1].timePeriod.start == 12987664
-    assert parsed_notif.resources[1].timePeriod.duration == 0
+    assert parsed_notif.resource is not None
+    assert parsed_notif.resource.value == 1001
+    assert parsed_notif.resource.timePeriod.start == 12987364
+    assert parsed_notif.resource.timePeriod.duration == 0
     assert parsed_notif.status == NotificationStatus.DEFAULT
     assert parsed_notif.subscriptionURI == "/edev/8/sub/5"
 
@@ -106,16 +85,15 @@ def test_notification_xml_doe():
         original_xml = fp.read()
 
     notif = Notification.from_xml(original_xml)
-    assert notif.resources is not None
-    assert len(notif.resources) == 1
-    assert notif.resources[0].DERControl is not None
-    assert len(notif.resources[0].DERControl) == 1
-    assert notif.resources[0].DERControl[0].interval.start == 456
-    assert notif.resources[0].DERControl[0].interval.duration == 789
-    assert notif.resources[0].DERControl[0].DERControlBase_.opModImpLimW.value == 100
-    assert notif.resources[0].DERControl[0].DERControlBase_.opModExpLimW.value == 200
-    assert notif.resources[0].DERControl[0].DERControlBase_.opModGenLimW.value == 300
-    assert notif.resources[0].DERControl[0].DERControlBase_.opModLoadLimW.value == 400
+    assert notif.resource is not None
+    assert notif.resource.DERControl is not None
+    assert len(notif.resource.DERControl) == 1
+    assert notif.resource.DERControl[0].interval.start == 456
+    assert notif.resource.DERControl[0].interval.duration == 789
+    assert notif.resource.DERControl[0].DERControlBase_.opModImpLimW.value == 100
+    assert notif.resource.DERControl[0].DERControlBase_.opModExpLimW.value == 200
+    assert notif.resource.DERControl[0].DERControlBase_.opModGenLimW.value == 300
+    assert notif.resource.DERControl[0].DERControlBase_.opModLoadLimW.value == 400
 
 
 def test_notification_encode_resource_DERControlListResponse():
@@ -128,30 +106,28 @@ def test_notification_encode_resource_DERControlListResponse():
     # constructed pydantic xml model directly causes headaches)
     # We will roundtrip that via XML to ensure all of our values are preserved
     notif_dict = Notification.from_xml(original_xml).model_dump()
-    notif_dict["resources"] = [
-        {
-            "all_": 1,
-            "results": 1,
-            "type": "DERControlList",
-            "href": "/my/list",
-            "DERControl": [
-                {
-                    "creationTime": 123,
-                    "mRID": "abc",
-                    "interval": {
-                        "start": 456,
-                        "duration": 789,
-                    },
-                    "DERControlBase_": {
-                        "opModImpLimW": {"value": 100, "multiplier": 1},
-                        "opModExpLimW": {"value": 200, "multiplier": 1},
-                        "opModGenLimW": {"value": 300, "multiplier": 1},
-                        "opModLoadLimW": {"value": 400, "multiplier": 1},
-                    },
-                }
-            ],
-        }
-    ]
+    notif_dict["resource"] = {
+        "all_": 1,
+        "results": 1,
+        "type": "DERControlList",
+        "href": "/my/list",
+        "DERControl": [
+            {
+                "creationTime": 123,
+                "mRID": "abc",
+                "interval": {
+                    "start": 456,
+                    "duration": 789,
+                },
+                "DERControlBase_": {
+                    "opModImpLimW": {"value": 100, "multiplier": 1},
+                    "opModExpLimW": {"value": 200, "multiplier": 1},
+                    "opModGenLimW": {"value": 300, "multiplier": 1},
+                    "opModLoadLimW": {"value": 400, "multiplier": 1},
+                },
+            }
+        ],
+    }
 
     # Quick sanity check on the raw XML
     updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
@@ -161,14 +137,13 @@ def test_notification_encode_resource_DERControlListResponse():
 
     # Now return to the original type and see if everything is there
     notif: Notification = Notification.from_xml(updated_xml)
-    assert notif.resources is not None
-    assert len(notif.resources) is not None
-    assert notif.resources[0].DERControl is not None
-    assert len(notif.resources[0].DERControl) == 1
-    assert notif.resources[0].DERControl[0].DERControlBase_.opModImpLimW.value == 100
-    assert notif.resources[0].DERControl[0].DERControlBase_.opModExpLimW.value == 200
-    assert notif.resources[0].DERControl[0].DERControlBase_.opModGenLimW.value == 300
-    assert notif.resources[0].DERControl[0].DERControlBase_.opModLoadLimW.value == 400
+    assert notif.resource is not None
+    assert notif.resource.DERControl is not None
+    assert len(notif.resource.DERControl) == 1
+    assert notif.resource.DERControl[0].DERControlBase_.opModImpLimW.value == 100
+    assert notif.resource.DERControl[0].DERControlBase_.opModExpLimW.value == 200
+    assert notif.resource.DERControl[0].DERControlBase_.opModGenLimW.value == 300
+    assert notif.resource.DERControl[0].DERControlBase_.opModLoadLimW.value == 400
 
 
 def test_notification_encode_resource_DefaultDERControl():
@@ -181,23 +156,21 @@ def test_notification_encode_resource_DefaultDERControl():
     # constructed pydantic xml model directly causes headaches)
     # We will roundtrip that via XML to ensure all of our values are preserved
     notif_dict = Notification.from_xml(original_xml).model_dump()
-    notif_dict["resources"] = [
-        {
-            "type": "DefaultDERControl",
-            "creationTime": 123,
-            "mRID": "abc",
-            "interval": {
-                "start": 456,
-                "duration": 789,
-            },
-            "DERControlBase_": {
-                "opModImpLimW": {"value": 100, "multiplier": 1},
-                "opModExpLimW": {"value": 200, "multiplier": 1},
-                "opModGenLimW": {"value": 300, "multiplier": 1},
-                "opModLoadLimW": {"value": 400, "multiplier": 1},
-            },
-        }
-    ]
+    notif_dict["resource"] = {
+        "type": "DefaultDERControl",
+        "creationTime": 123,
+        "mRID": "abc",
+        "interval": {
+            "start": 456,
+            "duration": 789,
+        },
+        "DERControlBase_": {
+            "opModImpLimW": {"value": 100, "multiplier": 1},
+            "opModExpLimW": {"value": 200, "multiplier": 1},
+            "opModGenLimW": {"value": 300, "multiplier": 1},
+            "opModLoadLimW": {"value": 400, "multiplier": 1},
+        },
+    }
 
     # Quick sanity check on the raw XML
     updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
@@ -206,13 +179,12 @@ def test_notification_encode_resource_DefaultDERControl():
 
     # Now return to the original type and see if everything is there
     notif: Notification = Notification.from_xml(updated_xml)
-    assert notif.resources is not None
-    assert len(notif.resources) == 1
-    assert notif.resources[0].DERControlBase_ is not None
-    assert notif.resources[0].DERControlBase_.opModImpLimW.value == 100
-    assert notif.resources[0].DERControlBase_.opModExpLimW.value == 200
-    assert notif.resources[0].DERControlBase_.opModGenLimW.value == 300
-    assert notif.resources[0].DERControlBase_.opModLoadLimW.value == 400
+    assert notif.resource is not None
+    assert notif.resource.DERControlBase_ is not None
+    assert notif.resource.DERControlBase_.opModImpLimW.value == 100
+    assert notif.resource.DERControlBase_.opModExpLimW.value == 200
+    assert notif.resource.DERControlBase_.opModGenLimW.value == 300
+    assert notif.resource.DERControlBase_.opModLoadLimW.value == 400
 
 
 def test_notification_encode_resource_TimeTariffIntervalListResponse():
@@ -225,26 +197,24 @@ def test_notification_encode_resource_TimeTariffIntervalListResponse():
     # constructed pydantic xml model directly causes headaches)
     # We will roundtrip that via XML to ensure all of our values are preserved
     notif_dict = Notification.from_xml(original_xml).model_dump()
-    notif_dict["resources"] = [
-        {
-            "all_": 1,
-            "results": 1,
-            "type": "TimeTariffIntervalList",
-            "href": "/my/list",
-            "TimeTariffInterval": [
-                {
-                    "creationTime": 123,
-                    "mRID": "abc",
-                    "interval": {
-                        "start": 456,
-                        "duration": 789,
-                    },
-                    "touTier": TOUType.NOT_APPLICABLE,
-                    "ConsumptionTariffIntervalListLink": {"all_": 1, "href": "/my/price/at/time/554433"},
-                }
-            ],
-        }
-    ]
+    notif_dict["resource"] = {
+        "all_": 1,
+        "results": 1,
+        "type": "TimeTariffIntervalList",
+        "href": "/my/list",
+        "TimeTariffInterval": [
+            {
+                "creationTime": 123,
+                "mRID": "abc",
+                "interval": {
+                    "start": 456,
+                    "duration": 789,
+                },
+                "touTier": TOUType.NOT_APPLICABLE,
+                "ConsumptionTariffIntervalListLink": {"all_": 1, "href": "/my/price/at/time/554433"},
+            }
+        ],
+    }
 
     # Quick sanity check on the raw XML
     updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
@@ -254,11 +224,10 @@ def test_notification_encode_resource_TimeTariffIntervalListResponse():
 
     # Now return to the original type and see if everything is there
     notif: Notification = Notification.from_xml(updated_xml)
-    assert notif.resources is not None
-    assert len(notif.resources) == 1
-    assert notif.resources[0].TimeTariffInterval is not None
-    assert len(notif.resources[0].TimeTariffInterval) == 1
-    assert notif.resources[0].TimeTariffInterval[0].ConsumptionTariffIntervalListLink.href == "/my/price/at/time/554433"
+    assert notif.resource is not None
+    assert notif.resource.TimeTariffInterval is not None
+    assert len(notif.resource.TimeTariffInterval) == 1
+    assert notif.resource.TimeTariffInterval[0].ConsumptionTariffIntervalListLink.href == "/my/price/at/time/554433"
 
 
 def test_notification_encode_resource_EndDeviceListResponse():
@@ -271,23 +240,21 @@ def test_notification_encode_resource_EndDeviceListResponse():
     # constructed pydantic xml model directly causes headaches)
     # We will roundtrip that via XML to ensure all of our values are preserved
     notif_dict = Notification.from_xml(original_xml).model_dump()
-    notif_dict["resources"] = [
-        {
-            "all_": 1,
-            "results": 1,
-            "type": "EndDeviceListResponse",
-            "href": "/my/list",
-            "EndDevice": [
-                {
-                    "lFDI": "lfdi-111",
-                    "sFDI": 111,
-                    "changedTime": 123,
-                    "ConnectionPointLink": {"href": "/href/cp"},
-                    "DERListLink": {"href": "/href/der"},
-                }
-            ],
-        }
-    ]
+    notif_dict["resource"] = {
+        "all_": 1,
+        "results": 1,
+        "type": "EndDeviceListResponse",
+        "href": "/my/list",
+        "EndDevice": [
+            {
+                "lFDI": "lfdi-111",
+                "sFDI": 111,
+                "changedTime": 123,
+                "ConnectionPointLink": {"href": "/href/cp"},
+                "DERListLink": {"href": "/href/der"},
+            }
+        ],
+    }
 
     # Quick sanity check on the raw XML
     updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
@@ -296,11 +263,10 @@ def test_notification_encode_resource_EndDeviceListResponse():
 
     # Now return to the original type and see if everything is there
     notif: Notification = Notification.from_xml(updated_xml)
-    assert notif.resources is not None
-    assert len(notif.resources) == 1
-    assert notif.resources[0].EndDevice is not None
-    assert len(notif.resources[0].EndDevice) == 1
-    assert notif.resources[0].EndDevice[0].lFDI == "lfdi-111"
-    assert notif.resources[0].EndDevice[0].sFDI == 111
-    assert notif.resources[0].EndDevice[0].ConnectionPointLink.href == "/href/cp"
-    assert notif.resources[0].EndDevice[0].DERListLink.href == "/href/der"
+    assert notif.resource is not None
+    assert notif.resource.EndDevice is not None
+    assert len(notif.resource.EndDevice) == 1
+    assert notif.resource.EndDevice[0].lFDI == "lfdi-111"
+    assert notif.resource.EndDevice[0].sFDI == 111
+    assert notif.resource.EndDevice[0].ConnectionPointLink.href == "/href/cp"
+    assert notif.resource.EndDevice[0].DERListLink.href == "/href/der"
