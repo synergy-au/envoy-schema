@@ -145,7 +145,7 @@ class Notification(SubscriptionBase):
     #      - in the pydantic Discriminator function get_notification_resource_discriminator
     #
     # NOTE - For more info - see pydantic docs on Unions / Discriminated Unions - Feature introduced in 2.5
-    resource: Optional[
+    resources: Optional[
         # This callable discriminator union isn't supported by pydantic XML
         # see: https://github.com/dapper91/pydantic-xml/issues/157 - we might be able to swap to this in the future
         # Annotated[
@@ -159,7 +159,7 @@ class Notification(SubscriptionBase):
         #     ],
         #     Discriminator(get_notification_resource_discriminator),
         # ]
-        NotificationResourceCombined  # Instead we use this as our workaround for now
+        list[NotificationResourceCombined]  # Instead we use this as our workaround for now
     ] = element(tag="Resource", default=None)
 
 
