@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2 import primitive_types, types
-from envoy_schema.server.schema.sep2.identification import IdentifiedObject, Resource
+from envoy_schema.server.schema.sep2.identification import IdentifiedObject, Link, ListLink, Resource, SubscribableList
 
 
 class ReadingBase(Resource):
@@ -49,6 +49,36 @@ class ReadingType(Resource):
 
 
 class UsagePointBase(IdentifiedObject):
+    """Logical point on a network at which consumption or production is either physically measured (e.g. metered) or
+    estimated (e.g. unmetered street lights)."""
+
     roleFlags: int = element()  # This should be of type RoleFlagsType
     serviceCategoryKind: types.ServiceKind = element()
     status: int = element()
+
+
+class UsagePoint(UsagePointBase):
+    """Logical point on a network at which consumption or production is either physically measured (e.g. metered) or
+    estimated (e.g. unmetered street lights)."""
+
+    deviceLFDI: str = element()
+    MeterReadingListLink: Optional[ListLink] = element(default=None)
+
+
+class MeterReading(IdentifiedObject):
+    """Set of values obtained from the meter."""
+
+    RateComponentListLink: Optional[ListLink] = element(default=None)
+    ReadingTypeLink: Link = element()
+    ReadingLink: Optional[Link] = element(default=None)
+    ReadingSetListLink: Optional[ListLink] = element(default=None)
+
+
+class ReadingSet(ReadingSetBase):
+    """A set of Readings of the ReadingType indicated by the parent MeterReading."""
+
+    ReadingListLink: Optional[ListLink] = element(default=None)
+
+
+class ReadingListResponse(SubscribableList, tag="ReadingList"):
+    Readings: Optional[list["Reading"]] = element(default=None, tag="Reading")

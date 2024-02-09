@@ -71,9 +71,12 @@ def test_notification_xml_reading():
 
     assert parsed_notif.subscribedResource == "/upt/0/mr/4/r"
     assert parsed_notif.resource is not None
-    assert parsed_notif.resource.value == 1001
-    assert parsed_notif.resource.timePeriod.start == 12987364
-    assert parsed_notif.resource.timePeriod.duration == 0
+    assert parsed_notif.resource.all_ == 1
+    assert parsed_notif.resource.results == 1
+    assert len(parsed_notif.resource.Readings) == 1
+    assert parsed_notif.resource.Readings[0].value == 1001
+    assert parsed_notif.resource.Readings[0].timePeriod.start == 12987364
+    assert parsed_notif.resource.Readings[0].timePeriod.duration == 0
     assert parsed_notif.status == NotificationStatus.DEFAULT
     assert parsed_notif.subscriptionURI == "/edev/8/sub/5"
 

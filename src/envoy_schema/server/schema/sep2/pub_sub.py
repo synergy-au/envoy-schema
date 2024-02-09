@@ -8,22 +8,16 @@ from envoy_schema.server.schema.sep2.der import DERControlBase, DERControlRespon
 from envoy_schema.server.schema.sep2.end_device import EndDeviceResponse
 from envoy_schema.server.schema.sep2.identification import List as Sep2List
 from envoy_schema.server.schema.sep2.identification import Resource
+from envoy_schema.server.schema.sep2.metering import Reading
 from envoy_schema.server.schema.sep2.pricing import TimeTariffIntervalResponse
-from envoy_schema.server.schema.sep2.primitive_types import HexBinary16, HttpUri, LocalAbsoluteUri
-from envoy_schema.server.schema.sep2.types import (
-    ConsumptionBlockType,
-    DateTimeIntervalType,
-    SubscribableType,
-    TOUType,
-    VersionType,
-    mRIDType,
-)
+from envoy_schema.server.schema.sep2.primitive_types import HttpUri, LocalAbsoluteUri
+from envoy_schema.server.schema.sep2.types import VersionType, mRIDType
 
 XSI_TYPE_TIME_TARIFF_INTERVAL_LIST = "TimeTariffIntervalList"
 XSI_TYPE_DER_CONTROL_LIST = "DERControlList"
 XSI_TYPE_DEFAULT_DER_CONTROL = "DefaultDERControl"
 XSI_TYPE_END_DEVICE_LIST = "EndDeviceList"
-XSI_TYPE_READING = "Reading"
+XSI_TYPE_READING_LIST = "ReadingList"
 XSI_TYPE_RESOURCE = "Resource"
 XSI_TYPE_DEFAULT = XSI_TYPE_RESOURCE
 
@@ -98,6 +92,9 @@ class NotificationResourceCombined(Resource):
     # EndDeviceListResponse
     EndDevice: Optional[list[EndDeviceResponse]] = element(default=None)
 
+    # ReadingListResponse
+    Readings: Optional[list[Reading]] = element(default=None, tag="Reading")
+
     # SubscribableIdentifiedObject
     description: Optional[str] = element(default=None)
     mRID: Optional[mRIDType] = element(default=None)
@@ -114,17 +111,6 @@ class NotificationResourceCombined(Resource):
     setGradW: Optional[int] = element(default=None)
     setSoftGradW: Optional[int] = element(default=None)
     DERControlBase_: Optional[DERControlBase] = element(tag="DERControlBase", default=None)
-
-    # Reading
-    subscribable: Optional[SubscribableType] = attr(default=None)
-    localID: Optional[HexBinary16] = element(default=None)
-
-    # ReadingBase
-    consumptionBlock: Optional[ConsumptionBlockType] = element(default=None)
-    qualityFlags: Optional[HexBinary16] = element(default=None)
-    timePeriod: Optional[DateTimeIntervalType] = element(default=None)
-    touTier: Optional[TOUType] = element(default=None)
-    value: Optional[int] = element(default=None)
 
 
 class Notification(SubscriptionBase):
@@ -154,7 +140,7 @@ class Notification(SubscriptionBase):
         #         Annotated[DERControlListResponse, Tag(XSI_TYPE_DER_CONTROL_LIST)],
         #         Annotated[DefaultDERControl, Tag(XSI_TYPE_DEFAULT_DER_CONTROL)],
         #         Annotated[EndDeviceListResponse, Tag(XSI_TYPE_END_DEVICE_LIST)],
-        #         Annotated[Reading, Tag(XSI_TYPE_READING)],
+        #         Annotated[ReadingListResponse, Tag(XSI_TYPE_READING)],
         #         Annotated[Resource, Tag(XSI_TYPE_RESOURCE)],
         #     ],
         #     Discriminator(get_notification_resource_discriminator),
