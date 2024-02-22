@@ -12,7 +12,7 @@ class SiteGroupResponse(BaseModel):
     total_sites: int  # How many sites are linked to this group
 
 
-class SitePageResponse(BaseModel):
+class SiteGroupPageResponse(BaseModel):
     """Represents a paginated response of SiteGroup"""
 
     total_count: int  # The total number of groups (independent of this page of results)
