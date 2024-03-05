@@ -160,6 +160,15 @@ class NormalCategoryType(IntEnum):
     CATEGORY_B = 2
 
 
+class DOESupportedMode(IntFlag):
+    """Series of bit flags: What CSIP Aus DOE capabilities are enabled"""
+
+    OP_MOD_EXPORT_LIMIT_W = auto()
+    OP_MOD_IMPORT_LIMIT_W = auto()
+    OP_MOD_GENERATION_LIMIT_W = auto()
+    OP_MOD_LOAD_LIMIT_W = auto()
+
+
 class DERControlBase(BaseXmlModelWithNS):
     """Distributed Energy Resource (DER) control values."""
 
@@ -425,6 +434,9 @@ class DERCapability(SubscribableResource):
     rtgVNom: Optional[VoltageRMS] = element(default=None)  # AC voltage nominal rating.
     type_: DERType = element(tag="type")  # Type of DER; see DERType object
 
+    # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
+    doeModesSupported: Optional[DOESupportedMode] = element(ns="csipaus", default=None)
+
 
 class DERSettings(SubscribableResource):
     """Distributed energy resource settings"""
@@ -504,6 +516,9 @@ class DERSettings(SubscribableResource):
         default=None
     )  # The nominal AC voltage (RMS) offset between the DER's electrical CP and the utility's point of common coupling.
     updatedTime: types.TimeType = element()  # Specifies the time at which the DER information was last updated.
+
+    # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
+    doeModesEnabled: Optional[DOESupportedMode] = element(ns="csipaus", default=None)
 
 
 class DERListResponse(List, tag="DERList"):
