@@ -370,7 +370,7 @@ class DERAvailability(SubscribableResource):
         default=None
     )  # Indicates number of seconds the DER will be able to receive active power at the reserveChargePercent level.
     readingTime: types.TimeType = element()  # The timestamp when the DER availability was last updated.
-    reserverChargePercent: Optional[types.PerCent] = element(
+    reserveChargePercent: Optional[types.PerCent] = element(
         default=None
     )  # Percent of continuous received active power (%setMaxChargeRateW) that is estimated to be available in reserve.
     reservePercent: Optional[types.PerCent] = element(
