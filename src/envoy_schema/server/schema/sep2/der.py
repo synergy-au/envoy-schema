@@ -301,13 +301,21 @@ class EndDeviceControlResponse(RandomizableEvent, tag="EndDeviceControl"):
 class DER(SubscribableResource):
     """sep2 DER: Contains links to DER resources."""
 
-    AssociatedUsagePointLink: Optional[Link]  # If present, this is the submeter that monitors the DER output.
-    AssociatedDERProgramListLink: Optional[ListLink]  # Link to List of DERPrograms having the DERControls for this DER
-    CurrentDERProgramLink: Optional[Link]  # If set, this is the DERProgram containing the currently active DERControl
-    DERStatusLink: Optional[Link]  # SHALL contain a Link to an instance of DERStatus.
-    DERCapabilityLink: Optional[Link]  # SHALL contain a Link to an instance of DERCapability.
-    DERSettingsLink: Optional[Link]  # SHALL contain a Link to an instance of DERSettings.
-    DERAvailabilityLink: Optional[Link]  # SHALL contain a Link to an instance of DERAvailability.
+    AssociatedUsagePointLink: Optional[Link] = element(
+        default=None
+    )  # If present, this is the submeter that monitors the DER output.
+    AssociatedDERProgramListLink: Optional[ListLink] = element(
+        default=None
+    )  # Link to List of DERPrograms having the DERControls for this DER
+    CurrentDERProgramLink: Optional[Link] = element(
+        default=None
+    )  # If set, this is the DERProgram containing the currently active DERControl
+    DERStatusLink: Optional[Link] = element(default=None)  # SHALL contain a Link to an instance of DERStatus.
+    DERCapabilityLink: Optional[Link] = element(default=None)  # SHALL contain a Link to an instance of DERCapability.
+    DERSettingsLink: Optional[Link] = element(default=None)  # SHALL contain a Link to an instance of DERSettings.
+    DERAvailabilityLink: Optional[Link] = element(
+        default=None
+    )  # SHALL contain a Link to an instance of DERAvailability.
 
 
 class ConnectStatusTypeValue(BaseXmlModelWithNS):
