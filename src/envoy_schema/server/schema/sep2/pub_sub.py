@@ -4,17 +4,46 @@ from typing import Any, Optional
 from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
-from envoy_schema.server.schema.sep2.der import DERControlBase, DERControlResponse
+from envoy_schema.server.schema.sep2.der import (
+    AbnormalCategoryType,
+    ConnectStatusTypeValue,
+    DERControlBase,
+    DERControlResponse,
+    DERType,
+    DOESupportedMode,
+    InverterStatusTypeValue,
+    LocalControlModeStatusTypeValue,
+    ManufacturerStatusValue,
+    NormalCategoryType,
+    OperationalModeStatusTypeValue,
+    StateOfChargeStatusValue,
+    StorageModeStatusTypeValue,
+)
+from envoy_schema.server.schema.sep2.der_control_types import (
+    ActivePower,
+    AmpereHour,
+    ApparentPower,
+    CurrentRMS,
+    PowerFactor,
+    ReactivePower,
+    ReactiveSusceptance,
+    VoltageRMS,
+    WattHour,
+)
 from envoy_schema.server.schema.sep2.end_device import EndDeviceResponse
 from envoy_schema.server.schema.sep2.identification import List as Sep2List
 from envoy_schema.server.schema.sep2.identification import Resource
 from envoy_schema.server.schema.sep2.metering import Reading
 from envoy_schema.server.schema.sep2.pricing import TimeTariffIntervalResponse
-from envoy_schema.server.schema.sep2.primitive_types import HttpUri, LocalAbsoluteUri
-from envoy_schema.server.schema.sep2.types import VersionType, mRIDType
+from envoy_schema.server.schema.sep2.primitive_types import HexBinary32, HttpUri, LocalAbsoluteUri
+from envoy_schema.server.schema.sep2.types import PerCent, TimeType, VersionType, mRIDType
 
 XSI_TYPE_TIME_TARIFF_INTERVAL_LIST = "TimeTariffIntervalList"
 XSI_TYPE_DER_CONTROL_LIST = "DERControlList"
+XSI_TYPE_DER_AVAILABILITY = "DERAvailability"
+XSI_TYPE_DER_CAPABILITY = "DERCapability"
+XSI_TYPE_DER_SETTINGS = "DERSettings"
+XSI_TYPE_DER_STATUS = "DERStatus"
 XSI_TYPE_DEFAULT_DER_CONTROL = "DefaultDERControl"
 XSI_TYPE_END_DEVICE_LIST = "EndDeviceList"
 XSI_TYPE_READING_LIST = "ReadingList"
@@ -111,6 +140,86 @@ class NotificationResourceCombined(Resource):
     setGradW: Optional[int] = element(default=None)
     setSoftGradW: Optional[int] = element(default=None)
     DERControlBase_: Optional[DERControlBase] = element(tag="DERControlBase", default=None)
+
+    # DERStatus
+    alarmStatus: Optional[HexBinary32] = element(default=None)
+    genConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None)
+    inverterStatus: Optional[InverterStatusTypeValue] = element(default=None)
+    localControlModeStatus: Optional[LocalControlModeStatusTypeValue] = element(default=None)
+    manufacturerStatus: Optional[ManufacturerStatusValue] = element(default=None)
+    operationalModeStatus: Optional[OperationalModeStatusTypeValue] = element(default=None)
+    readingTime: Optional[TimeType] = element(default=None)
+    stateOfChargeStatus: Optional[StateOfChargeStatusValue] = element(default=None)
+    storageModeStatus: Optional[StorageModeStatusTypeValue] = element(default=None)
+    storConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None)
+
+    # DERAvailability
+    availabilityDuration: Optional[int] = element(default=None)
+    maxChargeDuration: Optional[int] = element(default=None)
+    # readingTime: TimeType = element() # Duplicated from DERStatus
+    reserveChargePercent: Optional[PerCent] = element(default=None)
+    reservePercent: Optional[PerCent] = element(default=None)
+    statVarAvail: Optional[ReactivePower] = element(default=None)
+    statWAvail: Optional[ActivePower] = element(default=None)
+
+    # DERCapability
+    modesSupported: Optional[HexBinary32] = element(default=None)
+    rtgAbnormalCategory: Optional[AbnormalCategoryType] = element(default=None)
+    rtgMaxA: Optional[CurrentRMS] = element(default=None)
+    rtgMaxAh: Optional[AmpereHour] = element(default=None)
+    rtgMaxChargeRateVA: Optional[ApparentPower] = element(default=None)
+    rtgMaxChargeRateW: Optional[ActivePower] = element(default=None)
+    rtgMaxDischargeRateVA: Optional[ApparentPower] = element(default=None)
+    rtgMaxDischargeRateW: Optional[ActivePower] = element(default=None)
+    rtgMaxV: Optional[VoltageRMS] = element(default=None)
+    rtgMaxVA: Optional[ApparentPower] = element(default=None)
+    rtgMaxVar: Optional[ReactivePower] = element(default=None)
+    rtgMaxVarNeg: Optional[ReactivePower] = element(default=None)
+    rtgMaxW: Optional[ActivePower] = element(default=None)
+    rtgMaxWh: Optional[WattHour] = element(default=None)
+    rtgMinPFOverExcited: Optional[PowerFactor] = element(default=None)
+    rtgMinPFUnderExcited: Optional[PowerFactor] = element(default=None)
+    rtgMinV: Optional[VoltageRMS] = element(default=None)
+    rtgNormalCategory: Optional[NormalCategoryType] = element(default=None)
+    rtgOverExcitedPF: Optional[PowerFactor] = element(default=None)
+    rtgOverExcitedW: Optional[ActivePower] = element(default=None)
+    rtgReactiveSusceptance: Optional[ReactiveSusceptance] = element(default=None)
+    rtgUnderExcitedPF: Optional[PowerFactor] = element(default=None)
+    rtgUnderExcitedW: Optional[ActivePower] = element(default=None)
+    rtgVNom: Optional[VoltageRMS] = element(default=None)
+    type_: Optional[DERType] = element(tag="type", default=None)
+    doeModesSupported: Optional[DOESupportedMode] = element(ns="csipaus", default=None)
+
+    # DERSettings
+    modesEnabled: Optional[HexBinary32] = element(default=None)
+    # setESDelay: Optional[int] = element(default=None)  # Duplicated from DERControl
+    # setESHighFreq: Optional[int] = element(default=None) # Duplicated from DERControl
+    # setESHighVolt: Optional[int] = element(default=None) # Duplicated from DERControl
+    # setESLowFreq: Optional[int] = element(default=None) # Duplicated from DERControl
+    # setESLowVolt: Optional[int] = element(default=None) # Duplicated from DERControl
+    # setESRampTms: Optional[int] = element(default=None) # Duplicated from DERControl
+    # setESRandomDelay: Optional[int] = element(default=None) # Duplicated from DERControl
+    # setGradW: int = element() # Duplicated from DERControl
+    setMaxA: Optional[CurrentRMS] = element(default=None)
+    setMaxAh: Optional[AmpereHour] = element(default=None)
+    setMaxChargeRateVA: Optional[ApparentPower] = element(default=None)
+    setMaxChargeRateW: Optional[ActivePower] = element(default=None)
+    setMaxDischargeRateVA: Optional[ApparentPower] = element(default=None)
+    setMaxDischargeRateW: Optional[ActivePower] = element(default=None)
+    setMaxV: Optional[VoltageRMS] = element(default=None)
+    setMaxVar: Optional[ReactivePower] = element(default=None)
+    setMaxVarNeg: Optional[ReactivePower] = element(default=None)
+    setMaxW: Optional[ActivePower] = element(default=None)
+    setMaxWh: Optional[WattHour] = element(default=None)
+    setMinPFOverExcited: Optional[PowerFactor] = element(default=None)
+    setMinPFUnderExcited: Optional[PowerFactor] = element(default=None)
+    setMinV: Optional[VoltageRMS] = element(default=None)
+    # setSoftGradW: Optional[int] = element(default=None)  # Duplicated from DERControl
+    setVNom: Optional[VoltageRMS] = element(default=None)
+    setVRef: Optional[VoltageRMS] = element(default=None)
+    setVRefOfs: Optional[VoltageRMS] = element(default=None)
+    updatedTime: Optional[TimeType] = element(default=None)
+    doeModesEnabled: Optional[DOESupportedMode] = element(ns="csipaus", default=None)
 
 
 class Notification(SubscriptionBase):
