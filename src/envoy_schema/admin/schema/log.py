@@ -65,14 +65,13 @@ class WeatherForecastLog(BaseModel):
     interval_duration_seconds: int
 
 
-class CalculationLog(BaseModel):
+class CalculationLogRequest(BaseModel):
     """Represents the top level entity describing a single audit log of a historical calculation run.
 
     Calculation runs typically represent running powerflow / other model for some network based on forecast
     power/weather data (usually over multiple time steps) that may propose certain changes in DER behavior
     in order to satisfy certain network constraints"""
 
-    calculation_log_id: int
     created_time: datetime
     calculation_interval_start: datetime
     calculation_interval_duration_seconds: int
@@ -88,3 +87,13 @@ class CalculationLog(BaseModel):
     power_target_logs: list[PowerTargetLog]
     power_flow_logs: list[PowerFlowLog]
     weather_forecast_logs: list[WeatherForecastLog]
+
+
+class CalculationLogResponse(CalculationLogRequest):
+    """Represents the top level entity describing a single audit log of a historical calculation run.
+
+    Calculation runs typically represent running powerflow / other model for some network based on forecast
+    power/weather data (usually over multiple time steps) that may propose certain changes in DER behavior
+    in order to satisfy certain network constraints"""
+
+    calculation_log_id: int
