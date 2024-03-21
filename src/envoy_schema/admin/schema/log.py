@@ -14,8 +14,8 @@ class PowerForecastLog(BaseModel):
     external_device_id: Optional[str]
     site_id: Optional[int]
 
-    active_power_watts: int
-    reactive_power_var: int
+    active_power_watts: Optional[int]
+    reactive_power_var: Optional[int]
 
 
 class PowerTargetLog(BaseModel):
@@ -27,8 +27,8 @@ class PowerTargetLog(BaseModel):
     external_device_id: Optional[str]
     site_id: Optional[int]
 
-    target_active_power_watts: int
-    target_reactive_power_var: int
+    target_active_power_watts: Optional[int]
+    target_reactive_power_var: Optional[int]
 
 
 class PowerFlowLog(BaseModel):
