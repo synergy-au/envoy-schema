@@ -11,11 +11,11 @@ class PowerForecastLog(BaseModel):
 
     interval_start: datetime
     interval_duration_seconds: int
-    external_device_id: Optional[str]
-    site_id: Optional[int]
+    external_device_id: Optional[str] = None
+    site_id: Optional[int] = None
 
-    active_power_watts: Optional[int]
-    reactive_power_var: Optional[int]
+    active_power_watts: Optional[int] = None
+    reactive_power_var: Optional[int] = None
 
 
 class PowerTargetLog(BaseModel):
@@ -24,11 +24,11 @@ class PowerTargetLog(BaseModel):
 
     interval_start: datetime
     interval_duration_seconds: int
-    external_device_id: Optional[str]
-    site_id: Optional[int]
+    external_device_id: Optional[str] = None
+    site_id: Optional[int] = None
 
-    target_active_power_watts: Optional[int]
-    target_reactive_power_var: Optional[int]
+    target_active_power_watts: Optional[int] = None
+    target_reactive_power_var: Optional[int] = None
 
 
 class PowerFlowLog(BaseModel):
@@ -37,29 +37,29 @@ class PowerFlowLog(BaseModel):
 
     interval_start: datetime
     interval_duration_seconds: int
-    external_device_id: Optional[str]
+    external_device_id: Optional[str] = None
 
-    site_id: Optional[int]
-    solve_name: Optional[str]
-    pu_voltage_min: Optional[Decimal]
-    pu_voltage_max: Optional[Decimal]
-    pu_voltage: Optional[Decimal]
-    thermal_max_percent: Optional[Decimal]
+    site_id: Optional[int] = None
+    solve_name: Optional[str] = None
+    pu_voltage_min: Optional[Decimal] = None
+    pu_voltage_max: Optional[Decimal] = None
+    pu_voltage: Optional[Decimal] = None
+    thermal_max_percent: Optional[Decimal] = None
 
 
 class WeatherForecastLog(BaseModel):
     """Represents a weather forecast for a specific timestamp that was used to inform a parent CalculationLog"""
 
-    air_temperature_degrees_c: Optional[Decimal]
-    apparent_temperature_degrees_c: Optional[Decimal]
-    dew_point_degrees_c: Optional[Decimal]
-    humidity_percent: Optional[Decimal]
-    cloud_cover_percent: Optional[Decimal]
-    rain_probability_percent: Optional[Decimal]
-    rain_mm: Optional[Decimal]
-    rain_rate_mm: Optional[Decimal]
-    global_horizontal_irradiance_watts_m2: Optional[Decimal]
-    wind_speed_50m_km_h: Optional[Decimal]
+    air_temperature_degrees_c: Optional[Decimal] = None
+    apparent_temperature_degrees_c: Optional[Decimal] = None
+    dew_point_degrees_c: Optional[Decimal] = None
+    humidity_percent: Optional[Decimal] = None
+    cloud_cover_percent: Optional[Decimal] = None
+    rain_probability_percent: Optional[Decimal] = None
+    rain_mm: Optional[Decimal] = None
+    rain_rate_mm: Optional[Decimal] = None
+    global_horizontal_irradiance_watts_m2: Optional[Decimal] = None
+    wind_speed_50m_km_h: Optional[Decimal] = None
 
     interval_start: datetime
     interval_duration_seconds: int
@@ -75,12 +75,12 @@ class CalculationLogRequest(BaseModel):
     calculation_interval_start: datetime
     calculation_interval_duration_seconds: int
 
-    topology_id: Optional[str]
-    external_id: Optional[str]
-    description: Optional[str]
-    power_forecast_creation_time: Optional[datetime]
-    weather_forecast_creation_time: Optional[datetime]
-    weather_forecast_location_id: Optional[str]
+    topology_id: Optional[str] = None
+    external_id: Optional[str] = None
+    description: Optional[str] = None
+    power_forecast_creation_time: Optional[datetime] = None
+    weather_forecast_creation_time: Optional[datetime] = None
+    weather_forecast_location_id: Optional[str] = None
 
     power_forecast_logs: list[PowerForecastLog]
     power_target_logs: list[PowerTargetLog]
