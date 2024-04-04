@@ -72,7 +72,6 @@ class CalculationLogRequest(BaseModel):
     power/weather data (usually over multiple time steps) that may propose certain changes in DER behavior
     in order to satisfy certain network constraints"""
 
-    created_time: datetime
     calculation_interval_start: datetime
     calculation_interval_duration_seconds: int
 
@@ -97,3 +96,4 @@ class CalculationLogResponse(CalculationLogRequest):
     in order to satisfy certain network constraints"""
 
     calculation_log_id: int
+    created_time: datetime
