@@ -40,5 +40,6 @@ class BillingResponse(BaseModel):
 
     varh_readings: list[BillingReading]  # Will be ordered by site_id then period_start
     wh_readings: list[BillingReading]  # Will be ordered by site_id then period_start
+    watt_readings: list[BillingReading]  # Will be ordered by site_id then period_start
     active_tariffs: list[BillingTariffRate]  # Will be ordered by site_id then period_start
     active_does: list[BillingDoe]  # Will be ordered by site_id then period_start
