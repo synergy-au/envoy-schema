@@ -16,3 +16,12 @@ class AggregatorResponse(BaseModel):
     aggregator_id: int
     name: str
     domains: list[AggregatorDomain]
+
+
+class AggregatorPageResponse(BaseModel):
+    """Represents a paginated response of Aggregators"""
+
+    total_count: int  # The total number of aggregators (independent of this page of results)
+    limit: int  # The maximum number of aggregators that could've been returned (the limit set by the query)
+    start: int  # The number of aggregators that have been skipped as part of this query (the start set by the query)
+    aggregators: list[AggregatorResponse]  # The aggregator models in this page
