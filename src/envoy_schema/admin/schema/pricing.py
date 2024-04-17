@@ -30,7 +30,7 @@ class TariffGeneratedRateRequest(BaseModel):
     site_id: int
     start_time: datetime
     duration_seconds: int
-    import_active_price: float
-    export_active_price: float
-    import_reactive_price: float
-    export_reactive_price: float
+    import_active_price: float  # Price in dollars per kw/h
+    export_active_price: float  # Price in dollars per kw/h
+    import_reactive_price: float  # Price is dollars per kvar/h
+    export_reactive_price: float  # Price is dollars per kvar/h
