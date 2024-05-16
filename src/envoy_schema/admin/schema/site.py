@@ -6,9 +6,18 @@ from pydantic import BaseModel
 from envoy_schema.server.schema.sep2.types import DeviceCategory
 
 
-class SiteResponse(BaseModel):
-    """Response model for Site - includes the common details without exposing current aggregator assignments"""
+class SiteGroup(BaseModel):
+    """Represents a named group that a site might belong to"""
 
+    site_group_id: int
+    name: str
+    changed_time: datetime
+
+
+class SiteResponse(BaseModel):
+    """Response model for Site - includes the common details"""
+
+    aggregator_id: int
     site_id: int
     nmi: Optional[str]
     timezone_id: str
@@ -16,6 +25,8 @@ class SiteResponse(BaseModel):
     lfdi: str
     sfdi: int
     device_category: DeviceCategory
+
+    groups: list[SiteGroup]
 
 
 class SitePageResponse(BaseModel):
