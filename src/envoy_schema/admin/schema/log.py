@@ -97,3 +97,15 @@ class CalculationLogResponse(CalculationLogRequest):
 
     calculation_log_id: int
     created_time: datetime
+
+
+class CalculationLogListResponse(BaseModel):
+    """A list response of CalculationLogResponse entities. Don't expect CalculationLogResponse to include
+    any child logs - those can be fetched using calculation_log_id in a subsequent request.
+
+    Represents a page of items and a total of all available items"""
+
+    start: int
+    limit: int
+    total_calculation_logs: int
+    calculation_logs: list[CalculationLogResponse]

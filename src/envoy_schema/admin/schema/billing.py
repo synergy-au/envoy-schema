@@ -29,13 +29,26 @@ class BillingDoe(BaseModel):
     export_limit_watts: Decimal
 
 
-class BillingResponse(BaseModel):
-    """Response model for a billing report"""
+class AggregatorBillingResponse(BaseModel):
+    """Response model for a billing report scoped to a particular aggregator"""
 
     aggregator_id: int
     aggregator_name: str
     period_start: datetime
     period_end: datetime
+    tariff_id: int
+
+    varh_readings: list[BillingReading]  # Will be ordered by site_id then period_start
+    wh_readings: list[BillingReading]  # Will be ordered by site_id then period_start
+    watt_readings: list[BillingReading]  # Will be ordered by site_id then period_start
+    active_tariffs: list[BillingTariffRate]  # Will be ordered by site_id then period_start
+    active_does: list[BillingDoe]  # Will be ordered by site_id then period_start
+
+
+class CalculationLogBillingResponse(BaseModel):
+    """Response model for a billing report scoped to a particular calculation log"""
+
+    calculation_log_id: int
     tariff_id: int
 
     varh_readings: list[BillingReading]  # Will be ordered by site_id then period_start
