@@ -1,7 +1,7 @@
 from datetime import datetime
 from decimal import Decimal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class BillingReading(BaseModel):
@@ -29,30 +29,49 @@ class BillingDoe(BaseModel):
     export_limit_watts: Decimal
 
 
-class AggregatorBillingResponse(BaseModel):
-    """Response model for a billing report scoped to a particular aggregator"""
+class BaseBillingResponse(BaseModel):
+    """Billing data common to all billing responses"""
+
+    tariff_id: int
+
+    varh_readings: list[BillingReading]  # Will be ordered by site_id then period_start
+    wh_readings: list[BillingReading]  # Will be ordered by site_id then period_start
+    watt_readings: list[BillingReading]  # Will be ordered by site_id then period_start
+    active_tariffs: list[BillingTariffRate]  # Will be ordered by site_id then period_start
+    active_does: list[BillingDoe]  # Will be ordered by site_id then period_start
+
+
+class AggregatorBillingResponse(BaseBillingResponse):
+    """Response model for a billing report scoped to a particular aggregator for a period of time"""
 
     aggregator_id: int
     aggregator_name: str
     period_start: datetime
     period_end: datetime
-    tariff_id: int
-
-    varh_readings: list[BillingReading]  # Will be ordered by site_id then period_start
-    wh_readings: list[BillingReading]  # Will be ordered by site_id then period_start
-    watt_readings: list[BillingReading]  # Will be ordered by site_id then period_start
-    active_tariffs: list[BillingTariffRate]  # Will be ordered by site_id then period_start
-    active_does: list[BillingDoe]  # Will be ordered by site_id then period_start
 
 
-class CalculationLogBillingResponse(BaseModel):
+class CalculationLogBillingResponse(BaseBillingResponse):
     """Response model for a billing report scoped to a particular calculation log"""
 
     calculation_log_id: int
-    tariff_id: int
 
-    varh_readings: list[BillingReading]  # Will be ordered by site_id then period_start
-    wh_readings: list[BillingReading]  # Will be ordered by site_id then period_start
-    watt_readings: list[BillingReading]  # Will be ordered by site_id then period_start
-    active_tariffs: list[BillingTariffRate]  # Will be ordered by site_id then period_start
-    active_does: list[BillingDoe]  # Will be ordered by site_id then period_start
+
+class SiteBillingResponse(BaseBillingResponse):
+    """Response model for a billing report scoped to a particular set of site id's for a period of time"""
+
+    site_ids: list[int]
+    period_start: datetime
+    period_end: datetime
+
+
+MAX_SITE_IDS_IN_REQUEST = 100
+
+
+class SiteBillingRequest(BaseModel):
+    """Request to send to utility server to request a SiteBillingResponse for the specified parameters.
+    (used with uri.SitePeriodBillingUri)"""
+
+    site_ids: list[int] = Field(max_length=MAX_SITE_IDS_IN_REQUEST)  # Limited to MAX_SITE_IDS_IN_REQUEST items
+    period_start: datetime
+    period_end: datetime
+    tariff_id: int
