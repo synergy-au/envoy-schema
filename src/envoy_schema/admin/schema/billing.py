@@ -5,6 +5,8 @@ from pydantic import BaseModel, Field
 
 
 class BillingReading(BaseModel):
+    """Billing readings are a total across all phases for the period"""
+
     site_id: int
     period_start: datetime
     duration_seconds: int
@@ -30,7 +32,7 @@ class BillingDoe(BaseModel):
 
 
 class BaseBillingResponse(BaseModel):
-    """Billing data common to all billing responses"""
+    """Billing data common to all billing responses. All readings will come back as a total usage across all phases"""
 
     tariff_id: int
 
