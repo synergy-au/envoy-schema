@@ -29,4 +29,4 @@ class DoePageResponse(BaseModel):
     limit: int  # The maximum number of does that could've been returned (the limit set by the query)
     start: int  # The number of does that have been skipped as part of this query (the start set by the query)
     after: Optional[datetime]  # The "after" filter set by the query
-    sites: list[DynamicOperatingEnvelopeResponse]  # The doe models in this page
+    does: list[DynamicOperatingEnvelopeResponse]  # The doe models in this paged response
