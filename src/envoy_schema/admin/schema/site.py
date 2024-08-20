@@ -118,4 +118,6 @@ class SitePageResponse(BaseModel):
     total_count: int  # The total number of sites (independent of this page of results)
     limit: int  # The maximum number of sites that could've been returned (the limit set by the query)
     start: int  # The number of sites that have been skipped as part of this query (the start set by the query)
+    group: Optional[str]  # The "group" filter set by the query (if any)
+    after: Optional[datetime]  # The "after" filter set by the query (if any)
     sites: list[SiteResponse]  # The site models in this page
