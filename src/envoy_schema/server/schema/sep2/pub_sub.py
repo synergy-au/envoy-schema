@@ -35,8 +35,14 @@ from envoy_schema.server.schema.sep2.identification import List as Sep2List
 from envoy_schema.server.schema.sep2.identification import Resource
 from envoy_schema.server.schema.sep2.metering import Reading
 from envoy_schema.server.schema.sep2.pricing import TimeTariffIntervalResponse
-from envoy_schema.server.schema.sep2.primitive_types import HexBinary32, HttpUri, LocalAbsoluteUri
-from envoy_schema.server.schema.sep2.types import PerCent, TimeType, VersionType, mRIDType
+from envoy_schema.server.schema.sep2.primitive_types import (
+    HexBinary8,
+    HexBinary32,
+    HttpUri,
+    LocalAbsoluteUri,
+    HexBinary128,
+)
+from envoy_schema.server.schema.sep2.types import PerCent, SubscribableType, TimeType, VersionType
 
 XSI_TYPE_TIME_TARIFF_INTERVAL_LIST = "TimeTariffIntervalList"
 XSI_TYPE_DER_CONTROL_LIST = "DERControlList"
@@ -106,7 +112,15 @@ class NotificationResourceCombined(Resource):
     The plan is for the server to only fill out the fields relevant for the notification being served (based on
     the xsi:type attribute). Clients using this to parse Notifications will have to manually map the fields to
     the appropriate types.
+
+    HERE BE DRAGONS FOR XSD VALIDITY:
+        In order to keep XSD element ordering, we've had to do a few "creative" element orderings to ensure that
+        generated notifications have elements in the XSD valid order. Because a couple of element names are shared
+        between the combined resource types (eg setESDelay on DefaultDERControl / DERSettings) - We've had to define
+        things in a confusing order - There isn't another way around this. See highlighted items marked with SORRY.
     """
+
+    subscribable: Optional[SubscribableType] = attr(default=None)
 
     # List
     all_: Optional[int] = attr(name="all", default=None)
@@ -125,11 +139,16 @@ class NotificationResourceCombined(Resource):
     Readings: Optional[list[Reading]] = element(default=None, tag="Reading")
 
     # SubscribableIdentifiedObject
+    mRID: Optional[HexBinary128] = element(default=None)
     description: Optional[str] = element(default=None)
-    mRID: Optional[mRIDType] = element(default=None)
     version: Optional[VersionType] = element(default=None)
 
+    # SORRY (see docstring): DERSettings:  but because of the shared elements with DefaultDERControl, this must
+    # appear above DefaultDERControl
+    modesEnabled: Optional[HexBinary32] = element(default=None)  # SORRY
+
     # DefaultDERControl
+    DERControlBase_: Optional[DERControlBase] = element(tag="DERControlBase", default=None)
     setESDelay: Optional[int] = element(default=None)
     setESHighFreq: Optional[int] = element(default=None)
     setESHighVolt: Optional[int] = element(default=None)
@@ -138,25 +157,29 @@ class NotificationResourceCombined(Resource):
     setESRampTms: Optional[int] = element(default=None)
     setESRandomDelay: Optional[int] = element(default=None)
     setGradW: Optional[int] = element(default=None)
-    setSoftGradW: Optional[int] = element(default=None)
-    DERControlBase_: Optional[DERControlBase] = element(tag="DERControlBase", default=None)
+    # setSoftGradW: Optional[int] = element(default=None) # Duplicated from DERSettings
+
+    # SORRY (see docstring): DERAvailability but unfortunately DERAvailability/DERStatus: both share readingTime, these
+    # need to be brought up there to ensure they work if either resource type is populated
+    availabilityDuration: Optional[int] = element(default=None)  # SORRY
+    maxChargeDuration: Optional[int] = element(default=None)  # SORRY
 
     # DERStatus
     alarmStatus: Optional[HexBinary32] = element(default=None)
-    genConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None)
-    inverterStatus: Optional[InverterStatusTypeValue] = element(default=None)
-    localControlModeStatus: Optional[LocalControlModeStatusTypeValue] = element(default=None)
-    manufacturerStatus: Optional[ManufacturerStatusValue] = element(default=None)
-    operationalModeStatus: Optional[OperationalModeStatusTypeValue] = element(default=None)
+    genConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None, tag="genConnectStatus")
+    inverterStatus: Optional[InverterStatusTypeValue] = element(default=None, tag="inverterStatus")
+    localControlModeStatus: Optional[LocalControlModeStatusTypeValue] = element(
+        default=None, tag="localControlModeStatus"
+    )
+    manufacturerStatus: Optional[ManufacturerStatusValue] = element(default=None, tag="manufacturerStatus")
+    operationalModeStatus: Optional[OperationalModeStatusTypeValue] = element(default=None, tag="operationalModeStatus")
     readingTime: Optional[TimeType] = element(default=None)
-    stateOfChargeStatus: Optional[StateOfChargeStatusValue] = element(default=None)
-    storageModeStatus: Optional[StorageModeStatusTypeValue] = element(default=None)
-    storConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None)
+    stateOfChargeStatus: Optional[StateOfChargeStatusValue] = element(default=None, tag="stateOfChargeStatus")
+    storageModeStatus: Optional[StorageModeStatusTypeValue] = element(default=None, tag="storageModeStatus")
+    storConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None, tag="storConnectStatus")
 
     # DERAvailability
-    availabilityDuration: Optional[int] = element(default=None)
-    maxChargeDuration: Optional[int] = element(default=None)
-    # readingTime: TimeType = element() # Duplicated from DERStatus
+    # readingTime: TimeType = element()  # Duplicated from DERStatus
     reserveChargePercent: Optional[PerCent] = element(default=None)
     reservePercent: Optional[PerCent] = element(default=None)
     statVarAvail: Optional[ReactivePower] = element(default=None)
@@ -191,7 +214,6 @@ class NotificationResourceCombined(Resource):
     doeModesSupported: Optional[DOESupportedMode] = element(ns="csipaus", default=None)
 
     # DERSettings
-    modesEnabled: Optional[HexBinary32] = element(default=None)
     # setESDelay: Optional[int] = element(default=None)  # Duplicated from DERControl
     # setESHighFreq: Optional[int] = element(default=None) # Duplicated from DERControl
     # setESHighVolt: Optional[int] = element(default=None) # Duplicated from DERControl
@@ -214,12 +236,12 @@ class NotificationResourceCombined(Resource):
     setMinPFOverExcited: Optional[PowerFactor] = element(default=None)
     setMinPFUnderExcited: Optional[PowerFactor] = element(default=None)
     setMinV: Optional[VoltageRMS] = element(default=None)
-    # setSoftGradW: Optional[int] = element(default=None)  # Duplicated from DERControl
+    setSoftGradW: Optional[int] = element(default=None)
     setVNom: Optional[VoltageRMS] = element(default=None)
     setVRef: Optional[VoltageRMS] = element(default=None)
     setVRefOfs: Optional[VoltageRMS] = element(default=None)
     updatedTime: Optional[TimeType] = element(default=None)
-    doeModesEnabled: Optional[DOESupportedMode] = element(ns="csipaus", default=None)
+    doeModesEnabled: Optional[HexBinary8] = element(ns="csipaus", default=None)
 
 
 class Notification(SubscriptionBase):
@@ -228,8 +250,6 @@ class Notification(SubscriptionBase):
     passing the full representation."""
 
     newResourceURI: Optional[LocalAbsoluteUri] = element(default=None)  # The new location of the resource if moved.
-    status: NotificationStatus = element()
-    subscriptionURI: LocalAbsoluteUri = element()  # Subscription from which this notification was triggered.
 
     # A resource is an addressable unit of information, either a collection (List) or instance of an object
     # (identifiedObject, or simply, Resource)
@@ -256,31 +276,32 @@ class Notification(SubscriptionBase):
         # ]
         NotificationResourceCombined  # Instead we use this as our workaround for now
     ] = element(tag="Resource", default=None)
+    status: NotificationStatus = element()
+    subscriptionURI: LocalAbsoluteUri = element()  # Subscription from which this notification was triggered.
 
 
 class Condition(BaseXmlModelWithNS):
     """Indicates a condition that must be satisfied for the Notification to be triggered."""
 
     attributeIdentifier: ConditionAttributeIdentifier = element()
-    lowerThreshold: Optional[int] = element(default=None)  # The value of the lower threshold
-    upperThreshold: Optional[int] = element(default=None)  # The value of the upper threshold
+    lowerThreshold: int = element(default=None)  # The value of the lower threshold
+    upperThreshold: int = element(default=None)  # The value of the upper threshold
 
 
 class Subscription(SubscriptionBase):
     """Holds the information related to a client subscription to receive updates to a resource automatically."""
 
+    condition: Optional[Condition] = element(tag="Condition", default=None)
     encoding: SubscriptionEncoding = element()  # The resource for which the subscription applies.
     level: str = element()  # Contains the preferred schema and extensibility level indication such as "+S1"
     limit: int = element()  # This element is used to indicate the maximum number of list items that should be included
     # in a notification when the subscribed resource changes
     notificationURI: HttpUri = element()  # The resource to which to post the notifications
 
-    condition: Optional[Condition] = element(tag="Condition", default=None)
-
 
 class SubscriptionListResponse(Sep2List, tag="SubscriptionList"):
-    pollRate: Optional[int] = attr(default=None)  # The default polling rate for this function set in seconds
     subscriptions: Optional[list[Subscription]] = element(tag="Subscription", default=None)
+    pollRate: Optional[int] = attr(default=None)  # The default polling rate for this function set in seconds
 
 
 class NotificationListResponse(Sep2List, tag="NotificationList"):

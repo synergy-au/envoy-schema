@@ -1,17 +1,15 @@
 from enum import IntEnum, IntFlag, auto
 from functools import reduce
-from typing import Annotated
 
-from pydantic import Field, Tag
 from pydantic_xml import element
 
-from envoy_schema.server.schema.sep2 import base, primitive_types
+from envoy_schema.server.schema.sep2 import base
 
-PENType = Annotated[int, Tag("PENType")]
-VersionType = Annotated[int, Tag("VersionType")]
-
-
-mRIDType = Annotated[primitive_types.HexBinary128, Tag("mRIDType")]
+# Version SHALL indicate a distinct identifier for each revision of an IdentifiedObject. If not specified, a default
+# version of "0" (initial version) SHALL be assumed. Upon modification of any IdentifiedObject, the mRID SHALL remain
+# the same, but the version SHALL be incremented. Servers MAY NOT modify objects that they did not create, unless they
+# were notified of the change from the entity controlling the object's PEN.
+VersionType = int  # Expected to be uint16
 
 
 class AccumulationBehaviourType(IntEnum):
@@ -219,8 +217,12 @@ class DeviceCategory(IntFlag):
 # The combination of ALL DeviceCategory bit flags
 DEVICE_CATEGORY_ALL_SET: DeviceCategory = reduce(lambda a, b: a | b, DeviceCategory)  # type: ignore # py311 issue
 
-TimeType = Annotated[int, Tag("TimeType")]
-TimeOffsetType = Annotated[int, Tag("TimeOffsetType")]
+# Time is a signed 64 bit value representing the number of seconds since 0 hours, 0 minutes, 0 seconds, on the 1st of
+# January, 1970, in UTC, not counting leap seconds
+TimeType = int
+
+# A signed time offset, typically applied to a Time value, expressed in seconds.
+TimeOffsetType = int
 
 
 class TimeQualityType(IntEnum):
@@ -231,7 +233,7 @@ class TimeQualityType(IntEnum):
     intentionally_uncoordinated = 7
 
 
-class DateTimeIntervalType(base.BaseXmlModelWithNS):
+class DateTimeIntervalType(base.BaseXmlModelWithNS, tag="DateTimeInterval"):
     duration: int = element()
     start: TimeType = element()
 
@@ -294,13 +296,13 @@ class ReasonCodeType(IntEnum):
 
 
 # A signed time offset, typically applied to a Time value, expressed in seconds, with range -3600 to 3600.
-OneHourRangeType = Annotated[int, Field(ge=-3600, le=3600), Tag("OneHourRangeType")]
+OneHourRangeType = int
 
 # Used for signed percentages, specified in hundredths of a percent, -10000 - 10000. (10000 = 100%)
-SignedPerCent = Annotated[int, Field(ge=-10000, le=10000), Tag("SignedPerCent")]
+SignedPerCent = int
 
 # Used for percentages, specified in hundredths of a percent, 0 - 10000. (10000 = 100%)
-PerCent = Annotated[int, Field(ge=0, le=10000), Tag("PerCent")]
+PerCent = int
 
 
 class DERUnitRefType(IntEnum):

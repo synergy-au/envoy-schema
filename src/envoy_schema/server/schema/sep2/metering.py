@@ -11,18 +11,20 @@ class ReadingBase(Resource):
     qualityFlags: Optional[primitive_types.HexBinary16] = element(
         default=primitive_types.HexBinary16("00")
     )  # string (hex encoded) form that maps to QualityFlagsType
-    timePeriod: Optional[types.DateTimeIntervalType] = element(default=None)
+    timePeriod: Optional[types.DateTimeIntervalType] = element(
+        default=None, tag="timePeriod"
+    )  # Necessary due to DateTimeIntervalType defn
     touTier: Optional[types.TOUType] = element(default=0)
     value: Optional[int] = element(default=None)
 
 
 class Reading(ReadingBase):
-    subscribable: Optional[types.SubscribableType] = attr(default=None)
     localID: Optional[primitive_types.HexBinary16] = element(default=None)
+    subscribable: Optional[types.SubscribableType] = attr(default=None)
 
 
 class ReadingSetBase(IdentifiedObject):
-    timePeriod: types.DateTimeIntervalType = element()
+    timePeriod: types.DateTimeIntervalType = element(tag="timePeriod")  # Necessary due to DateTimeIntervalType defn
 
 
 class ReadingType(Resource):
@@ -52,7 +54,7 @@ class UsagePointBase(IdentifiedObject):
     """Logical point on a network at which consumption or production is either physically measured (e.g. metered) or
     estimated (e.g. unmetered street lights)."""
 
-    roleFlags: int = element()  # This should be of type RoleFlagsType
+    roleFlags: primitive_types.HexBinary16 = element()
     serviceCategoryKind: types.ServiceKind = element()
     status: int = element()
 
@@ -69,9 +71,9 @@ class MeterReading(IdentifiedObject):
     """Set of values obtained from the meter."""
 
     RateComponentListLink: Optional[ListLink] = element(default=None)
-    ReadingTypeLink: Link = element()
     ReadingLink: Optional[Link] = element(default=None)
     ReadingSetListLink: Optional[ListLink] = element(default=None)
+    ReadingTypeLink: Link = element()
 
 
 class ReadingSet(ReadingSetBase):

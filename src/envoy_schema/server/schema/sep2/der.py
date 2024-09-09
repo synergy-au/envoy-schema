@@ -169,6 +169,16 @@ class DOESupportedMode(IntFlag):
     OP_MOD_LOAD_LIMIT_W = auto()
 
 
+class FreqDroopType(BaseXmlModelWithNS):
+    """Type for Frequency-Droop (Frequency-Watt) operation."""
+
+    dBOF: int = element()  # Frequency droop dead band for over-frequency conditions.
+    dBUF: int = element()  # Frequency droop dead band for under-frequency conditions.
+    kOF: int = element()  # droop per-unit frequency change OF conditions corresponding to 1 power output change.
+    kUF: int = element()  # # droop per-unit frequency change UF conditions corresponding to 1 power output change.
+    openLoopTms: int = element()  # Open loop response time
+
+
 class DERControlBase(BaseXmlModelWithNS):
     """Distributed Energy Resource (DER) control values."""
 
@@ -184,7 +194,7 @@ class DERControlBase(BaseXmlModelWithNS):
     opModFixedW: Optional[types.SignedPerCent] = element(
         default=None
     )  # specifies a requested charge/discharge mode setpoint
-    opModFreqDroop: Optional[int] = element(default=None)  # Specifies a frequency-watt operation
+    opModFreqDroop: Optional[FreqDroopType] = element(default=None)  # Specifies a frequency-watt operation
     opModFreqWatt: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 0
     opModHFRTMayTrip: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 1
     opModHFRTMustTrip: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 2
@@ -225,6 +235,7 @@ class DERControlBase(BaseXmlModelWithNS):
 class DefaultDERControl(SubscribableIdentifiedObject):
     """Contains control mode information to be used if no active DERControl is found."""
 
+    DERControlBase_: DERControlBase = element(tag="DERControlBase")
     setESDelay: Optional[int] = element(default=None)  # Enter service delay, in hundredths of a second.
     setESHighFreq: Optional[int] = element(default=None)  # Enter service frequency high. Specified in hundredths of Hz
     setESHighVolt: Optional[int] = element(
@@ -242,16 +253,15 @@ class DefaultDERControl(SubscribableIdentifiedObject):
     setSoftGradW: Optional[int] = element(
         default=None
     )  # Set soft-start rate of change (soft-start ramp rate) of AP output
-    DERControlBase_: DERControlBase = element(tag="DERControlBase")
 
 
 class DERControlResponse(RandomizableEvent, tag="DERControl"):
     """Distributed Energy Resource (DER) time/event-based control."""
 
-    deviceCategory: Optional[primitive_types.HexBinary32] = element(
-        default=None
-    )  # the bitmap indicating device categories that SHOULD respond.
     DERControlBase_: DERControlBase = element(tag="DERControlBase")
+    deviceCategory: Optional[primitive_types.HexBinary32] = element(
+        default=None,
+    )  # the bitmap indicating device categories that SHOULD respond.
 
 
 class DERControlListResponse(SubscribableList, tag="DERControlList"):
@@ -278,11 +288,11 @@ class DERProgramListResponse(SubscribableList, tag="DERProgramList"):
 class DemandResponseProgramResponse(IdentifiedObject, tag="DemandResponseProgram"):
     """sep2 Demand response program"""
 
+    ActiveEndDeviceControlListLink: Optional[ListLink] = element(default=None)
     availabilityUpdatePercentChangeThreshold: Optional[types.PerCent] = element(default=None)
     availabilityUpdatePowerChangeThreshold: Optional[ActivePower] = element(default=None)
-    primacy: PrimacyType = element()
-    ActiveEndDeviceControlListLink: Optional[ListLink] = element(default=None)
     EndDeviceControlListLink: Optional[ListLink] = element(default=None)
+    primacy: PrimacyType = element()
 
 
 class DemandResponseProgramListResponse(Sep2List, tag="DemandResponseProgramList"):
@@ -292,7 +302,7 @@ class DemandResponseProgramListResponse(Sep2List, tag="DemandResponseProgramList
 class EndDeviceControlResponse(RandomizableEvent, tag="EndDeviceControl"):
     """Instructs an EndDevice to perform a specified action."""
 
-    deviceCategory: types.DeviceCategory = element()
+    deviceCategory: primitive_types.HexBinary32 = element()  # HexBinary Encoded types.DeviceCategory enum
     drProgramMandatory: bool = element()
     loadShiftForward: bool = element()
     overrideDuration: Optional[int] = element(default=None)
@@ -321,37 +331,37 @@ class DER(SubscribableResource):
     DERStatusLink: Optional[Link] = element(default=None)  # SHALL contain a Link to an instance of DERStatus.
 
 
-class ConnectStatusTypeValue(BaseXmlModelWithNS):
+class ConnectStatusTypeValue(BaseXmlModelWithNS, tag="ConnectStatusType"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
     value: primitive_types.HexBinary8 = element()  # Should have bits set from ConnectStatusType
 
 
-class InverterStatusTypeValue(BaseXmlModelWithNS):
+class InverterStatusTypeValue(BaseXmlModelWithNS, tag="InverterStatusType"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
     value: InverterStatusType = element()
 
 
-class LocalControlModeStatusTypeValue(BaseXmlModelWithNS):
+class LocalControlModeStatusTypeValue(BaseXmlModelWithNS, tag="LocalControlModeStatusType"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
     value: LocalControlModeStatusType = element()
 
 
-class OperationalModeStatusTypeValue(BaseXmlModelWithNS):
+class OperationalModeStatusTypeValue(BaseXmlModelWithNS, tag="OperationalModeStatusType"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
     value: OperationalModeStatusType = element()
 
 
-class StorageModeStatusTypeValue(BaseXmlModelWithNS):
+class StorageModeStatusTypeValue(BaseXmlModelWithNS, tag="StorageModeStatusType"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
     value: StorageModeStatusType = element()
 
 
-class ManufacturerStatusValue(BaseXmlModelWithNS):
+class ManufacturerStatusValue(BaseXmlModelWithNS, tag="ManufacturerStatusType"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
-    value: primitive_types.String6  # The manufacturer status value
+    value: primitive_types.String6 = element()  # The manufacturer status value
 
 
-class StateOfChargeStatusValue(BaseXmlModelWithNS):
+class StateOfChargeStatusValue(BaseXmlModelWithNS, tag="StateOfChargeStatusType"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
     value: types.PerCent = element()
 
@@ -359,16 +369,26 @@ class StateOfChargeStatusValue(BaseXmlModelWithNS):
 class DERStatus(SubscribableResource):
     """DER status information"""
 
+    # Pydantic looks for tags in subclasses if one isnt explicitly defined. Hence redundant tags are placed here,
+    # e.g. genConnectStatus, otherwise they will be renamed. Removing the tags in the subclasses would remove them
+    # from xsd validation
+
     alarmStatus: Optional[primitive_types.HexBinary32] = element(default=None)  # AlarmStatusType encoded HexBinary str
-    genConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None)  # Connection status for generator
-    inverterStatus: Optional[InverterStatusTypeValue] = element(default=None)
-    localControlModeStatus: Optional[LocalControlModeStatusTypeValue] = element(default=None)
-    manufacturerStatus: Optional[ManufacturerStatusValue] = element(default=None)
-    operationalModeStatus: Optional[OperationalModeStatusTypeValue] = element(default=None)
+    genConnectStatus: Optional[ConnectStatusTypeValue] = element(
+        default=None, tag="genConnectStatus"
+    )  # Connection status for generator
+    inverterStatus: Optional[InverterStatusTypeValue] = element(default=None, tag="inverterStatus")
+    localControlModeStatus: Optional[LocalControlModeStatusTypeValue] = element(
+        default=None, tag="localControlModeStatus"
+    )
+    manufacturerStatus: Optional[ManufacturerStatusValue] = element(default=None, tag="manufacturerStatus")
+    operationalModeStatus: Optional[OperationalModeStatusTypeValue] = element(default=None, tag="operationalModeStatus")
     readingTime: types.TimeType = element()
-    stateOfChargeStatus: Optional[StateOfChargeStatusValue] = element(default=None)
-    storageModeStatus: Optional[StorageModeStatusTypeValue] = element(default=None)
-    storConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None)  # Connection status for storage
+    stateOfChargeStatus: Optional[StateOfChargeStatusValue] = element(default=None, tag="stateOfChargeStatus")
+    storageModeStatus: Optional[StorageModeStatusTypeValue] = element(default=None, tag="storageModeStatus")
+    storConnectStatus: Optional[ConnectStatusTypeValue] = element(
+        default=None, tag="storConnectStatus"
+    )  # Connection status for storage
 
 
 class DERAvailability(SubscribableResource):
@@ -394,7 +414,8 @@ class DERAvailability(SubscribableResource):
 
 
 class DERCapability(SubscribableResource):
-    """Distributed energy resource type and nameplate ratings."""
+    """Distributed energy resource type and nameplate ratings. Intentionally differs from sep which is defined with a
+    Resource base class rather than SubscribableResource."""
 
     modesSupported: primitive_types.HexBinary32 = element()  # HexBinary encoded DERControlType flags
     rtgAbnormalCategory: Optional[AbnormalCategoryType] = element(default=None)  #
@@ -446,7 +467,7 @@ class DERCapability(SubscribableResource):
     type_: DERType = element(tag="type")  # Type of DER; see DERType object
 
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
-    doeModesSupported: Optional[DOESupportedMode] = element(ns="csipaus", default=None)
+    doeModesSupported: primitive_types.HexBinary8 = element(ns="csipaus", default=None)
 
 
 class DERSettings(SubscribableResource):
@@ -529,7 +550,7 @@ class DERSettings(SubscribableResource):
     updatedTime: types.TimeType = element()  # Specifies the time at which the DER information was last updated.
 
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
-    doeModesEnabled: Optional[DOESupportedMode] = element(ns="csipaus", default=None)
+    doeModesEnabled: primitive_types.HexBinary8 = element(ns="csipaus", default=None)
 
 
 class DERListResponse(List, tag="DERList"):

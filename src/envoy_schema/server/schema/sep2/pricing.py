@@ -14,6 +14,7 @@ from envoy_schema.server.schema.sep2.types import (
     TOUType,
     UnitValueType,
 )
+from envoy_schema.server.schema.sep2.primitive_types import HexBinary16
 
 
 class TariffProfileResponse(IdentifiedObject, tag="TariffProfile"):
@@ -22,22 +23,22 @@ class TariffProfileResponse(IdentifiedObject, tag="TariffProfile"):
 
     currency: Optional[CurrencyCode] = element(default=None)
     pricePowerOfTenMultiplier: Optional[int] = element(default=None)
-    primacyType: Optional[PrimacyType] = element(default=None)
+    primacyType: PrimacyType = element(default=None, tag="primacy")
     rateCode: Optional[str] = element(default=None)
-    serviceCategoryKind: ServiceKind = element()
-
     RateComponentListLink: Optional[ListLink] = element(default=None)
+    serviceCategoryKind: ServiceKind = element()
 
 
 class RateComponentResponse(IdentifiedObject, tag="RateComponent"):
     """Specifies the applicable charges for a single component of the rate, which could be generation price or
     consumption price, for example."""
 
+    ActiveTimeTariffIntervalListLink: Optional[ListLink] = element(default=None)
     flowRateEndLimit: Optional[UnitValueType] = element(default=None)
     flowRateStartLimit: Optional[UnitValueType] = element(default=None)
-    roleFlags: int = element()  # See RoleFlagsType
     ReadingTypeLink: Link = element()
-    ActiveTimeTariffIntervalListLink: Optional[ListLink] = element(default=None)
+    roleFlags: HexBinary16 = element()  # See RoleFlagsType
+
     TimeTariffIntervalListLink: ListLink = element()
 
 
@@ -45,8 +46,8 @@ class TimeTariffIntervalResponse(RandomizableEvent, tag="TimeTariffInterval"):
     """Describes the time-differentiated portion of the RateComponent, if applicable, and provides the ability to
     specify multiple time intervals, each with its own consumption-based components and other attributes."""
 
-    touTier: TOUType = element()
     ConsumptionTariffIntervalListLink: ListLink = element()
+    touTier: TOUType = element()
 
 
 class ConsumptionTariffIntervalResponse(Resource, tag="ConsumptionTariffInterval"):

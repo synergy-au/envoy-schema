@@ -1,12 +1,18 @@
 from urllib.parse import urlparse
 
-from pydantic import AfterValidator
+from pydantic import AfterValidator, Field
 from typing_extensions import Annotated
 
 
 def validate_String6(v: str):
     if len(v) > 6:
         raise ValueError("String6 max length of 6.")
+    return v
+
+
+def validate_String192(v: str):
+    if len(v) > 192:
+        raise ValueError("String192 max length of 192.")
     return v
 
 
@@ -88,7 +94,10 @@ def validate_HttpUri(v: str):
     return v
 
 
+Uint8 = Annotated[int, Field(ge=0, le=255)]
+
 String6 = Annotated[str, AfterValidator(validate_String6)]
+String192 = Annotated[str, AfterValidator(validate_String192)]
 
 HexBinary8 = Annotated[str, AfterValidator(validate_HexBinary8)]
 HexBinary16 = Annotated[str, AfterValidator(validate_HexBinary16)]
@@ -97,6 +106,7 @@ HexBinary48 = Annotated[str, AfterValidator(validate_HexBinary48)]
 HexBinary64 = Annotated[str, AfterValidator(validate_HexBinary64)]
 HexBinary128 = Annotated[str, AfterValidator(validate_HexBinary128)]
 HexBinary160 = Annotated[str, AfterValidator(validate_HexBinary160)]
+
 
 LocalAbsoluteUri = Annotated[str, AfterValidator(validate_LocalAbsoluteUri)]
 HttpUri = Annotated[str, AfterValidator(validate_HttpUri)]

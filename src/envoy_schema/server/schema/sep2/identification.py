@@ -6,12 +6,12 @@ from envoy_schema.server.schema.sep2 import base, primitive_types, types
 
 
 class Resource(base.BaseXmlModelWithNS):
-    href: Optional[str] = attr(default=None)
     type: Optional[str] = attr(ns="xsi", default=None)
+    href: Optional[str] = attr(default=None)
 
 
 class IdentifiedObject(Resource):
-    mRID: types.mRIDType = element()
+    mRID: primitive_types.HexBinary128 = element()
     description: Optional[str] = element(default=None)
     version: Optional[types.VersionType] = element(default=None)
 
@@ -28,7 +28,7 @@ class SubscribableList(SubscribableResource):
 
 
 class SubscribableIdentifiedObject(SubscribableResource):
-    mRID: types.mRIDType = element()  # The global identifier of the object
+    mRID: primitive_types.HexBinary128 = element()  # The global identifier of the object
     description: Optional[str] = element(
         default=None
     )  # The description is a human readable text describing or naming the object.
@@ -39,17 +39,16 @@ class RespondableResource(Resource):
     """A Resource to which a Response can be requested."""
 
     replyTo: Optional[str] = attr(default=None)
-    responseRequired: Optional[primitive_types.HexBinary32] = attr(default=None)
+    responseRequired: Optional[primitive_types.HexBinary8] = attr(default=00)
 
 
 class RespondableSubscribableIdentifiedObject(RespondableResource):
     """An IdentifiedObject to which a Response can be requested."""
 
-    subscribable: Optional[types.SubscribableType] = attr(default=None)
-
-    description: Optional[str] = element(default=None)
     mRID: primitive_types.HexBinary128 = element()
+    description: Optional[str] = element(default=None)
     version: Optional[types.VersionType] = element(default=None)
+    subscribable: Optional[types.SubscribableType] = attr(default=None)
 
 
 class List(Resource):
@@ -60,8 +59,8 @@ class List(Resource):
     results: int = attr()  # Indicates the number of items in this page of results.
 
 
-class Link(Resource):
-    pass
+class Link(base.BaseXmlModelWithNS):
+    href: str = attr()
 
 
 class ListLink(Link):
