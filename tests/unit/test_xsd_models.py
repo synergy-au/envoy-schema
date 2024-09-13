@@ -349,3 +349,26 @@ def test_NotificationResourceCombined(
     is_valid = csip_aus_schema.validate(xml_doc)
     errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_schema.error_log))
     assert is_valid, f"{xml}\nErrors:\n{errors}"
+
+
+def test_hexbinary_doe_types():
+    """
+    Manual check that some hexbinary types are set as hexbinary. Easy to miss due to necessary assertical overrides
+    """
+    class_values = [
+        (DERSettings, "modesEnabled"),
+        (DERSettings, "doeModesEnabled"),
+        (DERCapability, "modesSupported"),
+        (DERCapability, "doeModesSupported"),
+    ]
+
+    for xml_class, value in class_values:
+        # This is a workaround to identify an annotated type that uses one of our validate_HexBinaryXXX funcs
+        value_type = xml_class.__annotations__.get(value)
+        assert "HexBinary" in str(value_type), f"Expected a HexBinary type in {value} of the {xml_class}"
+
+        # Additional check for NotificationResourceCombined
+        notification_value = NotificationResourceCombined.__annotations__.get(value)
+        assert "HexBinary" in str(
+            notification_value
+        ), f"Expected HexBinary type in {value} of NotificationResourceCombined"
