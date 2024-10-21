@@ -34,6 +34,13 @@ class CalculationLogVariableValues(BaseModel):
     of what a variable represents is opaque to the utility server.
 
     Within a CalculationLog, the combination of variable_id, site_id and interval_period are a unique index
+
+
+    The values (when returned from the server) will have the following sort order applied:
+        calculation_log_id ASCENDING
+        variable_id ASCENDING
+        site_id_snapshot ASCENDING
+        interval_period ASCENDING
     """
 
     # ID defined by the client that disambiguate one set of time-series from another data from another. eg: a value of 1
@@ -87,7 +94,10 @@ class CalculationLogRequest(BaseModel):
     weather_forecast_location_id: Optional[str] = None  # ID associated the weather location that the forecast is for
 
     variable_metadata: list[CalculationLogMetadata]  # Metadata associated with the variables defined in variable_values
-    variable_values: Optional[CalculationLogVariableValues]  # The actual time series observations in this calculation
+
+    # The actual time series observations in this calculation
+    # The values will have a defined sort order (see docs on CalculationLogVariableValues)
+    variable_values: Optional[CalculationLogVariableValues]
 
 
 class CalculationLogResponse(CalculationLogRequest):
