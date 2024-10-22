@@ -37,7 +37,6 @@ class CalculationLogVariableValues(BaseModel):
 
 
     The values (when returned from the server) will have the following sort order applied:
-        calculation_log_id ASCENDING
         variable_id ASCENDING
         site_id_snapshot ASCENDING
         interval_period ASCENDING
