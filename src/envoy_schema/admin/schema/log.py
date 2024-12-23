@@ -155,7 +155,7 @@ class CalculationLogRequest(BaseModel):
 
     # The actual labels in this calculation log
     # The labels will have a defined sort order (see docs on CalculationLogLabelValues)
-    label_values: Optional[CalculationLogVariableValues]
+    label_values: Optional[CalculationLogLabelValues]
 
 
 class CalculationLogResponse(CalculationLogRequest):
