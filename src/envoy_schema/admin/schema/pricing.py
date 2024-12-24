@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Decimal
 from typing import Optional
 
 from pydantic import BaseModel
@@ -33,10 +34,10 @@ class TariffGeneratedRateRequest(BaseModel):
     calculation_log_id: Optional[int]  # The ID of the CalculationLog that created this rate (or NULL if no link)
     start_time: datetime
     duration_seconds: int
-    import_active_price: float  # Price in dollars per kw/h
-    export_active_price: float  # Price in dollars per kw/h
-    import_reactive_price: float  # Price is dollars per kvar/h
-    export_reactive_price: float  # Price is dollars per kvar/h
+    import_active_price: Decimal  # Price in dollars per kw/h (holds 4 decimal places of precision)
+    export_active_price: Decimal  # Price in dollars per kw/h (holds 4 decimal places of precision)
+    import_reactive_price: Decimal  # Price is dollars per kvar/h (holds 4 decimal places of precision)
+    export_reactive_price: Decimal  # Price is dollars per kvar/h (holds 4 decimal places of precision)
 
 
 class TariffGeneratedRateResponse(TariffGeneratedRateRequest):
