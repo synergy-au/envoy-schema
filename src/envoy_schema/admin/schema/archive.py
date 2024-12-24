@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Generic, Optional, TypeVar
 
 from pydantic import BaseModel
 
@@ -32,3 +32,19 @@ class ArchiveSiteResponse(ArchiveBase, SiteResponse):
     """Archived version of SiteResponse"""
 
     pass
+
+
+ArchiveType = TypeVar(
+    "ArchiveType", ArchiveDynamicOperatingEnvelopeResponse, ArchiveTariffGeneratedRateResponse, ArchiveSiteResponse
+)
+
+
+class ArchivePageResponse(BaseModel, Generic[ArchiveType]):
+    """Represents a paginated response of archive entities"""
+
+    total_count: int  # The total number of entities (independent of this page of results)
+    limit: int  # The maximum number of entities that could've been returned (the limit set by the query)
+    start: int  # The number of entities that have been skipped as part of this query (the start set by the query)
+    period_start: datetime  # The period_start parameter from the original request
+    period_end: datetime  # The period_end parameter from the original request
+    entities: list[ArchiveType]  # The entity models in this paged response
