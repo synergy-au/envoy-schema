@@ -11,7 +11,7 @@ def validate_String6(v: str):
 
 
 def validate_String32(v: str):
-    if len(v) > 6:
+    if len(v) > 32:
         raise ValueError("String32 max length of 32.")
     return v
 
