@@ -50,7 +50,7 @@ class LogEvent(Resource):
         default=None
     )  # Human readable text that MAY be used to transmit additional details about the event. Host may remove this.
 
-    extendedData: Optional[int] = element()  # May be used to transmit additional details about the event.
+    extendedData: Optional[int] = element(default=None)  # May be used to transmit additional details about the event.
     functionSet: FunctionSetIdentifier = element()
     logEventCode: int = element()  # An 8 bit unsigned integer. logEventCodes are scoped to a profile and a function set
     logEventID: int = element()  # An 16 bit unsigned integer.
