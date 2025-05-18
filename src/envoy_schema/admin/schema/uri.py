@@ -21,11 +21,10 @@ CalculationLogCreateUri = "/calculation_log"
 CalculationLogUri = "/calculation_log/{calculation_log_id}"
 CalculationLogsForPeriod = "/calculation_log/period/{period_start}/{period_end}"
 
-SiteControlGroupUri = "/site_control"  # Fetching / Adding site control groups
-SiteControlUri = "/site_control/{group_id}"  # Fetching / Adding site controls (under a group)
-SiteControlRangeUri = (
-    "/site_control/{group_id}/{period_start}/{period_end}"  # Fetching / deleting controls that are active in range
-)
+SiteControlGroupListUri = "/site_control_group"  # Fetching / Adding site control groups
+SiteControlGroupUri = "/site_control_group/{group_id}"  # Fetching / Changing site control groups
+SiteControlUri = "/site_control_group/{group_id}/controls"  # Fetching / Adding site controls (under a group)
+SiteControlRangeUri = "/site_control_group/{group_id}/controls/{period_start}/{period_end}"  # Fetching/deleting controls that start in range # noqa: E501
 
 ServerConfigRuntimeUri = "/server_config/run_time"  # For getting/setting ServerRuntimeConfig
 ServerConfigControlDefaultUri = "/server_config/control_default"  # For getting/setting ControlDefaultConfig
