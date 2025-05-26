@@ -570,7 +570,7 @@ class DERSettings(SubscribableResource):
     doeModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
 
     # Storage Extensions
-    # This is an encodede version of VPPSupportedMode
+    # This is an encoded version of VPPSupportedMode
     vppModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
     # Minimum operational value for stored energy in watt hours. This is the value at which the battery will stop
     # discharging to maintain state of charge above OEM or installer specified reserved minimum.
