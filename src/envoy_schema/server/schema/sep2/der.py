@@ -574,7 +574,7 @@ class DERSettings(SubscribableResource):
     vppModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
     # Minimum operational value for stored energy in watt hours. This is the value at which the battery will stop
     # discharging to maintain state of charge above OEM or installer specified reserved minimum.
-    setMinWh: Optional[WattHour] = element(default=None)
+    setMinWh: Optional[WattHour] = element(ns="csipaus", default=None)
 
 
 class DERListResponse(List, tag="DERList"):

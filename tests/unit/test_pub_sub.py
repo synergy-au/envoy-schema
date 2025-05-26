@@ -90,6 +90,7 @@ def test_notification_xml_doe():
     notif = Notification.from_xml(original_xml)
     assert notif.resource is not None
     assert notif.resource.DERControl is not None
+    print(notif.resource.DERControl)
     assert len(notif.resource.DERControl) == 1
     assert notif.resource.DERControl[0].interval.start == 456
     assert notif.resource.DERControl[0].interval.duration == 789
@@ -97,6 +98,7 @@ def test_notification_xml_doe():
     assert notif.resource.DERControl[0].DERControlBase_.opModExpLimW.value == 200
     assert notif.resource.DERControl[0].DERControlBase_.opModGenLimW.value == 300
     assert notif.resource.DERControl[0].DERControlBase_.opModLoadLimW.value == 400
+    assert notif.resource.DERControl[0].DERControlBase_.opModStorageTargetW.value == 500
 
 
 def test_notification_encode_resource_DERControlListResponse():
