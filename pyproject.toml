@@ -48,7 +48,7 @@ Homepage = "https://github.com/bsgip/envoy-schema"
 
 [project.optional-dependencies]
 all = ["envoy_schema[dev, test]"]
-dev = ["bandit", "flake8", "mypy", "types-python-dateutil", "types-tzlocal"]
+dev = ["bandit", "flake8", "mypy", "types-python-dateutil", "types-tzlocal", "lxml-stubs"]
 test = ["pytest", "assertical"]
 
 [tool.setuptools.package-data]
