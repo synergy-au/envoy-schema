@@ -18,7 +18,7 @@
                 <csipaus:opModExpLimW><multiplier>1</multiplier><value>200</value></csipaus:opModExpLimW>
                 <csipaus:opModGenLimW><multiplier>1</multiplier><value>300</value></csipaus:opModGenLimW>
                 <csipaus:opModLoadLimW><multiplier>1</multiplier><value>400</value></csipaus:opModLoadLimW>
-			    <csipaus:opModStorageTargetW><multiplier>1</multiplier><value>500</value></csipaus:opModStorageTargetW>
+                <csipaus:opModStorageTargetW><multiplier>1</multiplier><value>500</value></csipaus:opModStorageTargetW>
             </DERControlBase>
         </DERControl>
     </Resource>
