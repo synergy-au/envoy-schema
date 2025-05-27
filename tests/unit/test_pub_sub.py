@@ -90,7 +90,6 @@ def test_notification_xml_doe():
     notif = Notification.from_xml(original_xml)
     assert notif.resource is not None
     assert notif.resource.DERControl is not None
-    print(notif.resource.DERControl)
     assert len(notif.resource.DERControl) == 1
     assert notif.resource.DERControl[0].interval.start == 456
     assert notif.resource.DERControl[0].interval.duration == 789
