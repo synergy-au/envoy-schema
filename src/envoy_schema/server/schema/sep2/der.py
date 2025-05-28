@@ -169,6 +169,12 @@ class DOESupportedMode(IntFlag):
     OP_MOD_LOAD_LIMIT_W = auto()
 
 
+class VPPSupportedMode(IntFlag):
+    """Bitmap indicating the VPP controls enabled by the device."""
+
+    OP_MOD_STORAGE_TARGET_W = auto()
+
+
 class FreqDroopType(BaseXmlModelWithNS):
     """Type for Frequency-Droop (Frequency-Watt) operation."""
 
@@ -230,6 +236,11 @@ class DERControlBase(BaseXmlModelWithNS):
     opModLoadLimW: Optional[ActivePower] = element(
         ns="csipaus", default=None
     )  # max limit on charge watts for a single DER
+
+    # Storage extension
+    opModStorageTargetW: Optional[ActivePower] = element(
+        ns="csipaus", default=None
+    )  # This is a target aggregate output, in Watts, for one or more storage components within an EndDevice.
 
 
 class DefaultDERControl(SubscribableIdentifiedObject):
@@ -470,6 +481,10 @@ class DERCapability(SubscribableResource):
     # This is an encoded version of DOESupportedMode
     doeModesSupported: primitive_types.HexBinary8 = element(ns="csipaus", default=None)
 
+    # Storage Extension (encoded here as it makes decoding a whole lot simpler)
+    # This is an encoded version of VPPSupportedMode
+    vppModesSupported: primitive_types.HexBinary8 = element(ns="csipaus", default=None)
+
 
 class DERSettings(SubscribableResource):
     """Distributed energy resource settings"""
@@ -553,6 +568,13 @@ class DERSettings(SubscribableResource):
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
     # This is an encoded version of DOESupportedMode
     doeModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
+
+    # Storage Extensions
+    # This is an encoded version of VPPSupportedMode
+    vppModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
+    # Minimum operational value for stored energy in watt hours. This is the value at which the battery will stop
+    # discharging to maintain state of charge above OEM or installer specified reserved minimum.
+    setMinWh: Optional[WattHour] = element(ns="csipaus", default=None)
 
 
 class DERListResponse(List, tag="DERList"):
