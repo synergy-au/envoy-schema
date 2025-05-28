@@ -9,6 +9,10 @@ filterwarnings = ["error::DeprecationWarning"]
 [tool.mypy]
 exclude = ["tests", "build"]
 
+[[tool.mypy.overrides]]
+module = ["lxml"]
+ignore_errors = true
+
 [tool.bandit]
 exclude_dirs = ["tests"]
 
