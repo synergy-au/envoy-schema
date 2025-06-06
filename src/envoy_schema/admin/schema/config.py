@@ -45,7 +45,7 @@ class ControlDefaultResponse(BaseModel):
     ramp_rate_percent_per_second: Optional[Decimal]
 
     # Storage extension
-    storage_target_watts: Optional[Decimal]
+    server_default_storage_target_watts: Optional[Decimal]
 
     created_time: datetime
     changed_time: datetime
