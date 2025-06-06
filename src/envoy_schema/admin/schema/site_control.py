@@ -28,6 +28,9 @@ class SiteControlRequest(BaseModel):
     )
     load_limit_watts: Optional[Decimal] = None  # Corresponds to CSIP-Aus opModLoadLimW (None will not encode anything)
 
+    # Storage extension
+    storage_target_watts: Optional[Decimal] = None
+
 
 class SiteControlResponse(SiteControlRequest):
     """Site Control basic model when being queried externally"""
