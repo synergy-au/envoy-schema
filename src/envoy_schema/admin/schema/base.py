@@ -1,6 +1,11 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+__all__ = [
+    "CertificateResponse",
+    "CertificatePageResponse",
+]
+
 
 class BasePageModel(BaseModel):
     total_count: int  # The total number of objects (independent of this page of results)

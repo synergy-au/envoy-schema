@@ -11,4 +11,4 @@ from .pricing import *
 from .site import *
 from .site_control import *
 from .site_group import *
-from .uri import *
+from . import uri
