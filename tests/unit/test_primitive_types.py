@@ -1,6 +1,6 @@
 import pytest
 
-from envoy_schema.server.schema.sep2.primitive_types import validate_HttpUri, validate_LocalAbsoluteUri
+from envoy_schema.primitive_types import validate_HttpUri, validate_LocalAbsoluteUri
 
 
 @pytest.mark.parametrize(

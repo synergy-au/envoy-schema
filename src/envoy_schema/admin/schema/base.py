@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
+from envoy_schema.server.schema.sep2 import primitive_types
 
 __all__ = [
     "CertificateResponse",
@@ -26,7 +27,7 @@ class CertificateResponse(BaseModel):
 class CertificateRequest(BaseModel):
     """Used for encoding a certificate object"""
 
-    lfdi: str
+    lfdi: primitive_types.HexBinary160
     expiry: datetime | None
 
 

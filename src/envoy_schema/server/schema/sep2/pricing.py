@@ -14,7 +14,7 @@ from envoy_schema.server.schema.sep2.types import (
     TOUType,
     UnitValueType,
 )
-from envoy_schema.server.schema.sep2.primitive_types import HexBinary16
+from envoy_schema.primitive_types import HexBinary16
 
 
 class TariffProfileResponse(IdentifiedObject, tag="TariffProfile"):

@@ -5,7 +5,7 @@ from pydantic_xml import element
 
 from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
 from envoy_schema.server.schema.sep2.identification import RespondableSubscribableIdentifiedObject
-from envoy_schema.server.schema.sep2.primitive_types import String192
+from envoy_schema.primitive_types import String192
 from envoy_schema.server.schema.sep2.types import DateTimeIntervalType, OneHourRangeType, TimeType
 
 
