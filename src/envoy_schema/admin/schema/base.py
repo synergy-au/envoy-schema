@@ -27,7 +27,7 @@ class CertificateRequest(BaseModel):
     """Used for encoding a certificate object"""
 
     lfdi: str
-    expiry: datetime
+    expiry: datetime | None
 
 
 class CertificatePageResponse(BasePageModel):
