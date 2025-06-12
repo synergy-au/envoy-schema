@@ -4,6 +4,7 @@ from datetime import datetime
 __all__ = [
     "CertificateResponse",
     "CertificatePageResponse",
+    "CertificateRequest",
 ]
 
 
@@ -18,6 +19,13 @@ class CertificateResponse(BaseModel):
 
     certificate_id: int
     created: datetime
+    lfdi: str
+    expiry: datetime
+
+
+class CertificateRequest(BaseModel):
+    """Used for encoding a certificate object"""
+
     lfdi: str
     expiry: datetime
 
