@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic_xml import attr, element
 
-from envoy_schema.server.schema.sep2 import primitive_types
+from envoy_schema import primitive_types
 from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
 from envoy_schema.server.schema.sep2.identification import IdentifiedObject
 from envoy_schema.server.schema.sep2.identification import List as Sep2List

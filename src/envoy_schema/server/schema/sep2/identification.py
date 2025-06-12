@@ -2,7 +2,8 @@ from typing import Optional
 
 from pydantic_xml import attr, element
 
-from envoy_schema.server.schema.sep2 import base, primitive_types, types
+from envoy_schema.server.schema.sep2 import base, types
+from envoy_schema import primitive_types
 
 
 class Resource(base.BaseXmlModelWithNS):
