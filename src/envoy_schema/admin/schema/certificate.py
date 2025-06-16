@@ -34,9 +34,9 @@ class CertificateAssignmentRequest(pydantic.BaseModel):
     The intent is that the certificate can be created from the model or simply assigned e.g. to an aggregator
     """
 
-    certificate_id: str | None
-    lfdi: str | None
-    expiry: dt.datetime | None
+    certificate_id: int | None = None
+    lfdi: str | None = None
+    expiry: dt.datetime | None = None
 
     @pydantic.model_validator(mode="after")
     def either_id_or_lfdi_provided(self) -> Self:
