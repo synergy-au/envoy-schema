@@ -1,5 +1,3 @@
-from typing import Self
-
 import pydantic
 import datetime as dt
 
@@ -39,7 +37,7 @@ class CertificateAssignmentRequest(pydantic.BaseModel):
     expiry: dt.datetime | None = None
 
     @pydantic.model_validator(mode="after")
-    def id_or_lfdi_provided_xor(self) -> Self:
+    def id_or_lfdi_provided_xor(self) -> "CertificateAssignmentRequest":
         """Validates either one of lfdi or id provided, but not both (exclusive or).
 
         Both are identifiers of a single certificate, so ambiguity could be
