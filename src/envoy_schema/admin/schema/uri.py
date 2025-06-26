@@ -10,7 +10,7 @@ AggregatorCertificateUri = (
 )
 AggregatorDomainListUri = "/aggregator/{aggregator_id}/aggregator_domain"  # Adding domain to an aggregator
 AggregatorDomainUri = "/aggregator_domain/{aggregator_domain_id}"  # Update / Delete domain
-CertificateListUri = "/certficate"  # Adding / Listing certificates
+CertificateListUri = "/certificate"  # Adding / Listing certificates
 CertificateUri = "/certificate/{certificate_id}"  # Update / Delete certificate
 CertificateAggregatorListUri = "/certificate/{certificate_id}/aggregator"  # Listing aggregators per certificate
 ArchiveForPeriodSites = "/archive/{period_start}/{period_end}/sites"
@@ -25,6 +25,7 @@ SiteUri = "/site/{site_id}"  # Supports deleting single sites
 SiteControlDefaultConfigUri = "/site/{site_id}/control_default"  # For managing ControlDefaultConfig per site
 SiteGroupUri = "/site_group/{group_name}"
 SiteGroupListUri = "/site_group"
+CSIPAusSiteReadingUri = "/site_readings/{site_id}/csip_aus_unit/{unit_enum}/period/{period_start}/{period_end}"
 AggregatorBillingUri = "/billing/aggregator/{aggregator_id}/tariff/{tariff_id}/period/{period_start}/{period_end}"
 SitePeriodBillingUri = "/billing/site/period"
 CalculationLogBillingUri = "/billing/calculation_log/{calculation_log_id}/tariff/{tariff_id}"
