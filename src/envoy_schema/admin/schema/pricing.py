@@ -25,6 +25,7 @@ class TariffResponse(BaseModel):
     currency_code: CurrencyCode
     created_time: datetime
     changed_time: datetime
+    fsa_id: int
 
 
 class TariffGeneratedRateRequest(BaseModel):
