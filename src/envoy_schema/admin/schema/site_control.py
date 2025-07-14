@@ -27,6 +27,9 @@ class SiteControlRequest(BaseModel):
         None  # Corresponds to CSIP-Aus opModGenLimW (None will not encode anything)
     )
     load_limit_watts: Optional[Decimal] = None  # Corresponds to CSIP-Aus opModLoadLimW (None will not encode anything)
+    set_point_percentage: Optional[Decimal] = (
+        None  # percent of device max power settings to charge (if negative) or discharge (if positive) at. 100 = 100%
+    )
 
     # Storage extension
     storage_target_watts: Optional[Decimal] = None
@@ -55,6 +58,7 @@ class SiteControlGroupRequest(BaseModel):
 
     description: str  # Human readable description (32 char max)
     primacy: int  # Lower = Higher priority. Affects "child" controls relative priority when compared to other groups
+    fsa_id: int = 1  # The function set assignment ID that this SiteControl group will be grouped under
 
 
 class SiteControlGroupResponse(SiteControlGroupRequest):

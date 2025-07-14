@@ -22,7 +22,7 @@ class CSIPAusSiteReadingUnit(IntEnum):
     A future release might include a strict bool flag to enable the use of imperfect readings.
 
     It assumes the following:
-        - The Kind is 37 (POWER, mandatory by csip) 12 (Energy) or 0 (NA)
+        - The Kind is 37 (POWER, mandatory by csip), 12 (Energy) or 0 (NA)
         - The data qualifier is 2 (Average, mandatory by csip) or 0 (inst)
         - Any RoleFlags are allowed, does not show whether sites are mirrors, DER, submeter, or aggregation points.
             If both site and device information are present (role flags 3 and 73, respectively, site data is returned)
