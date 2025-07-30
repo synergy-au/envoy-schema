@@ -30,6 +30,9 @@ class SiteControlRequest(BaseModel):
     set_point_percentage: Optional[Decimal] = (
         None  # percent of device max power settings to charge (if negative) or discharge (if positive) at. 100 = 100%
     )
+    ramp_time_seconds: Optional[Decimal] = (
+        None  # Corresponds to rampTms (None will not encode anything). 100 = 100 seconds
+    )
 
     # Storage extension
     storage_target_watts: Optional[Decimal] = None
@@ -41,6 +44,7 @@ class SiteControlResponse(SiteControlRequest):
     site_control_id: int  # Internal identifier for this DOE
     created_time: datetime  # When this control was created
     changed_time: datetime  # When this control was last changed
+    superseded: bool  # Whether this control has been superseded by a higher priority control since its creation
 
 
 class SiteControlPageResponse(BaseModel):
