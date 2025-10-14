@@ -483,7 +483,7 @@ class DERCapability(SubscribableResource):
 
     # Storage Extension (encoded here as it makes decoding a whole lot simpler)
     # This is an encoded version of VPPSupportedMode
-    vppModesSupported: primitive_types.HexBinary8 = element(ns="csipaus", default=None)
+    vppModesSupported: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
 
 
 class DERSettings(SubscribableResource):
