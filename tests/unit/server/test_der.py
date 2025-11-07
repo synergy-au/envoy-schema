@@ -1,4 +1,5 @@
 import pytest
+import pydantic
 
 from pydantic_core import ValidationError
 
@@ -70,3 +71,10 @@ def test_DERStatus_long_manufacturer():
 
     assert max_len.manufacturerStatus.dateTime == 123
     assert max_len.manufacturerStatus.value == "maxlen"
+
+
+def test_DERSettings_invalid_HexBinary():
+    with pytest.raises(pydantic.ValidationError, match="Invalid digits provided for hexadecimal parsing."):
+        original = DERSettings.model_validate(
+            {"setGradW": 123, "setMaxW": {"multiplier": 5, "value": 456}, "updatedTime": 789, "doeModesEnabled": "NN"}
+        )
