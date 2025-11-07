@@ -34,6 +34,9 @@ class SiteControlRequest(BaseModel):
         None  # Corresponds to rampTms (None will not encode anything). 100 = 100 seconds
     )
 
+    # Storage extension
+    storage_target_watts: Optional[Decimal] = None
+
 
 class SiteControlResponse(SiteControlRequest):
     """Site Control basic model when being queried externally"""
