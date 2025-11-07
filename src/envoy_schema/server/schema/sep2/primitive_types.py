@@ -67,10 +67,12 @@ def validate_HexBinary160(v: str):
 
 
 def validate_HexBinary(v: str):
-    try: 
+    """Validates that a string is a base16 parseable integer"""
+    try:
         int(v, 16)
     except ValueError:
         raise ValueError("Invalid digits provided for hexadecimal parsing.")
+    return v
 
 
 def validate_LocalAbsoluteUri(v: str):
