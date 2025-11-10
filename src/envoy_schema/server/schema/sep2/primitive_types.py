@@ -66,6 +66,15 @@ def validate_HexBinary160(v: str):
     return v
 
 
+def validate_HexBinary(v: str):
+    """Validates that a string is a base16 parseable integer"""
+    try:
+        int(v, 16)
+    except ValueError:
+        raise ValueError("Invalid digits provided for hexadecimal parsing.")
+    return v
+
+
 def validate_LocalAbsoluteUri(v: str):
     """Only does a cursory check that a URI looks like a local absolute URI eg: /edev/123/cp"""
     v = v.strip()
@@ -115,14 +124,48 @@ String6 = Annotated[str, AfterValidator(validate_String6)]
 String32 = Annotated[str, AfterValidator(validate_String32)]
 String192 = Annotated[str, AfterValidator(validate_String192)]
 
-HexBinary8 = Annotated[str, AfterValidator(validate_HexBinary8), PlainSerializer(serialize_octet, return_type=str)]
-HexBinary16 = Annotated[str, AfterValidator(validate_HexBinary16), PlainSerializer(serialize_octet, return_type=str)]
-HexBinary32 = Annotated[str, AfterValidator(validate_HexBinary32), PlainSerializer(serialize_octet, return_type=str)]
-HexBinary48 = Annotated[str, AfterValidator(validate_HexBinary48), PlainSerializer(serialize_octet, return_type=str)]
-HexBinary64 = Annotated[str, AfterValidator(validate_HexBinary64), PlainSerializer(serialize_octet, return_type=str)]
-HexBinary128 = Annotated[str, AfterValidator(validate_HexBinary128), PlainSerializer(serialize_octet, return_type=str)]
-HexBinary160 = Annotated[str, AfterValidator(validate_HexBinary160), PlainSerializer(serialize_octet, return_type=str)]
-
+HexBinary8 = Annotated[
+    str,
+    AfterValidator(validate_HexBinary),
+    AfterValidator(validate_HexBinary8),
+    PlainSerializer(serialize_octet, return_type=str),
+]
+HexBinary16 = Annotated[
+    str,
+    AfterValidator(validate_HexBinary),
+    AfterValidator(validate_HexBinary16),
+    PlainSerializer(serialize_octet, return_type=str),
+]
+HexBinary32 = Annotated[
+    str,
+    AfterValidator(validate_HexBinary),
+    AfterValidator(validate_HexBinary32),
+    PlainSerializer(serialize_octet, return_type=str),
+]
+HexBinary48 = Annotated[
+    str,
+    AfterValidator(validate_HexBinary),
+    AfterValidator(validate_HexBinary48),
+    PlainSerializer(serialize_octet, return_type=str),
+]
+HexBinary64 = Annotated[
+    str,
+    AfterValidator(validate_HexBinary),
+    AfterValidator(validate_HexBinary64),
+    PlainSerializer(serialize_octet, return_type=str),
+]
+HexBinary128 = Annotated[
+    str,
+    AfterValidator(validate_HexBinary),
+    AfterValidator(validate_HexBinary128),
+    PlainSerializer(serialize_octet, return_type=str),
+]
+HexBinary160 = Annotated[
+    str,
+    AfterValidator(validate_HexBinary),
+    AfterValidator(validate_HexBinary160),
+    PlainSerializer(serialize_octet, return_type=str),
+]
 
 LocalAbsoluteUri = Annotated[str, AfterValidator(validate_LocalAbsoluteUri)]
 HttpUri = Annotated[str, AfterValidator(validate_HttpUri)]
