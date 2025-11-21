@@ -570,7 +570,7 @@ class DERSettings(SubscribableResource):
 
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
     # This is an encoded version of DOESupportedMode
-    doeModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus")
+    doeModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
 
     # Storage Extensions
     # This is an encoded version of VPPSupportedMode
