@@ -26,7 +26,12 @@ def test_missing_list_defaults_empty():
 
 def test_DERCapability_roundtrip():
     original = DERCapability.model_validate(
-        {"modesSupported": "0f", "rtgMaxW": {"multiplier": 5, "value": 456}, "type_": DERType.FUEL_CELL}
+        {
+            "modesSupported": "0f",
+            "rtgMaxW": {"multiplier": 5, "value": 456},
+            "type_": DERType.FUEL_CELL,
+            "doeModesSupported": "aa",
+        }
     )
 
     round_tripped = DERCapability.from_xml(original.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True))
