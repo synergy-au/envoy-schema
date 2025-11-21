@@ -479,7 +479,7 @@ class DERCapability(SubscribableResource):
 
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
     # This is an encoded version of DOESupportedMode
-    doeModesSupported: primitive_types.HexBinary8 = element(ns="csipaus", default=None)
+    doeModesSupported: primitive_types.HexBinary8 = element(ns="csipaus")
 
     # Storage Extension (encoded here as it makes decoding a whole lot simpler)
     # This is an encoded version of VPPSupportedMode
@@ -570,7 +570,7 @@ class DERSettings(SubscribableResource):
 
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
     # This is an encoded version of DOESupportedMode
-    doeModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
+    doeModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus")
 
     # Storage Extensions
     # This is an encoded version of VPPSupportedMode
