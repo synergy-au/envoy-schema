@@ -43,7 +43,7 @@ def test_DERCapability_roundtrip():
 
 def test_DERSettings_roundtrip():
     original = DERSettings.model_validate(
-        {"setGradW": 123, "setMaxW": {"multiplier": 5, "value": 456}, "updatedTime": 789, "doeModesEnabled": "bb"}
+        {"setGradW": 123, "setMaxW": {"multiplier": 5, "value": 456}, "updatedTime": 789}
     )
 
     round_tripped = DERSettings.from_xml(original.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True))
