@@ -14,6 +14,7 @@ from assertical.fake.generator import (
     register_value_generator,
 )
 from lxml import etree
+from pydantic_xml import BaseXmlModel
 from pydantic_xml.model import XmlModelMeta
 
 from envoy_schema.server.schema.csip_aus.connection_point import ConnectionPointRequest
@@ -36,7 +37,6 @@ from envoy_schema.server.schema.sep2.pricing import RateComponentListResponse, T
 from envoy_schema.server.schema.sep2.pub_sub import (
     XSI_TYPE_DEFAULT_DER_CONTROL,
     XSI_TYPE_DER_AVAILABILITY,
-    XSI_TYPE_DER_CAPABILITY,
     XSI_TYPE_DER_CONTROL_LIST,
     XSI_TYPE_DER_PROGRAM_LIST,
     XSI_TYPE_DER_SETTINGS,
@@ -91,14 +91,14 @@ def custom_assertical_registrations(csip_aus_schema):
 
 
 def generate_and_validate_xml(
-    xml_class: type,
+    xml_class: type[BaseXmlModel],
     csip_aus_schema: etree.XMLSchema,
     optional_is_none: bool,
 ) -> tuple[bool, str]:
     """Generate class instances using assertical, convert to xml and then validate against csip_aus_schema which
     contains sep, csipaus-core and csipaus-ext xsd files."""
     # Generate XML string
-    entity: xml_class = generate_class_instance(
+    entity = generate_class_instance(
         t=xml_class,
         optional_is_none=optional_is_none,
         generate_relationships=True,
@@ -122,7 +122,7 @@ def generate_and_validate_xml(
     "xml_class, optional_is_none", product(import_all_classes_from_module("envoy_schema.server.schema"), [True, False])
 )
 def test_all_xml_models_csip_aus(
-    xml_class: type,
+    xml_class: type[BaseXmlModel],
     csip_aus_schema: etree.XMLSchema,
     custom_assertical_registrations,
     optional_is_none: bool,
@@ -134,7 +134,6 @@ def test_all_xml_models_csip_aus(
     for skip_classes in [
         BaseXmlModelWithNS,  # Not necessary to xsd validate.
         ConnectionPointRequest,  # Not necessary to xsd validate, but supports both csipaus311 and 311a.
-        DERCapability,  # See separate test below, is made subscribable intentionally differing from the framework.
         RateComponentListResponse,  # See separate test below, is also made subscribable.
         NotificationResourceCombined,  # Separate test below, this pydantic workaround affects two classes below.
         NotificationListResponse,  # See separate test below.
@@ -170,32 +169,6 @@ def test_error_response_xsd(csip_aus_schema: etree.XMLSchema, optional_is_none: 
     # The only error should be that the message element is not expected.
     elif optional_is_none is False:
         assert errors == "1: Element '{urn:ieee:std:2030.5:ns}message': This element is not expected."
-
-
-@pytest.mark.parametrize("optional_is_none", [True, False])
-def test_DERCapability_xsd(
-    csip_aus_schema: etree.XMLSchema,
-    optional_is_none: bool,
-    custom_assertical_registrations,
-):
-    """Test DERCapability separately as it is intentionally a subscribable resource rather than simply a resource"""
-
-    is_valid, errors = generate_and_validate_xml(
-        xml_class=DERCapability,
-        csip_aus_schema=csip_aus_schema,
-        optional_is_none=optional_is_none,
-    )
-
-    # if optional_is_none is True there should be no difference from the schema (subscribable is optional)
-    if optional_is_none is True:
-        assert is_valid, errors
-
-    # The only issue should be an error about the subscribable definition
-    if optional_is_none is False:
-        assert errors == (
-            "1: Element '{urn:ieee:std:2030.5:ns}DERCapability', attribute 'subscribable': "
-            "The attribute 'subscribable' is not allowed."
-        )
 
 
 @pytest.mark.parametrize("optional_is_none", [True, False])
@@ -289,7 +262,6 @@ def notification_resource_combined_parameters() -> list[tuple[type, str, bool]]:
         (DefaultDERControl, XSI_TYPE_DEFAULT_DER_CONTROL),
         (DERStatus, XSI_TYPE_DER_STATUS),
         (DERAvailability, XSI_TYPE_DER_AVAILABILITY),
-        (DERCapability, XSI_TYPE_DER_CAPABILITY),
         (DERSettings, XSI_TYPE_DER_SETTINGS),
         (DERProgramListResponse, XSI_TYPE_DER_PROGRAM_LIST),
         (FunctionSetAssignmentsListResponse, XSI_TYPE_FUNCTION_SET_ASSIGNMENTS_LIST),
@@ -323,13 +295,6 @@ def test_NotificationResourceCombined(
             elif p.collection_type is not None:
                 raise NotImplementedError(f"Haven't added support in this test for {p.collection_type}")
             kvps[p.name] = val
-
-    # Subscribable on some classes was something unique to this implementation - it's not in the standard
-    # but was added because it was a nice feature - here we unpick it so we can XSD validate
-    if sub_type in [
-        DERCapability,
-    ]:
-        del kvps["subscribable"]
 
     resource: NotificationResourceCombined = generate_class_instance(
         NotificationResourceCombined, optional_is_none=True, **kvps
