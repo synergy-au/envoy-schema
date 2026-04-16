@@ -256,11 +256,6 @@ class DERControlBase(BaseXmlModelWithNS):
         ns="csipaus", default=None
     )  # This is a target aggregate output, in Watts, for one or more storage components within an EndDevice
 
-    # Storage extension
-    opModStorageTargetW: Optional[ActivePower] = element(
-        ns="csipaus", default=None
-    )  # This is a target aggregate output, in Watts, for one or more storage components within an EndDevice.
-
 
 class DefaultDERControl(SubscribableIdentifiedObject):
     """Contains control mode information to be used if no active DERControl is found."""
