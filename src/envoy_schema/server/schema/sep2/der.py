@@ -19,16 +19,17 @@ from envoy_schema.server.schema.sep2.der_control_types import (
     WattHour,
 )
 from envoy_schema.server.schema.sep2.event import RandomizableEvent
-from envoy_schema.server.schema.sep2.identification import IdentifiedObject, Link, Resource
+from envoy_schema.server.schema.sep2.identification import IdentifiedObject, Link
 from envoy_schema.server.schema.sep2.identification import List
 from envoy_schema.server.schema.sep2.identification import List as Sep2List
 from envoy_schema.server.schema.sep2.identification import (
     ListLink,
+    Resource,
     SubscribableIdentifiedObject,
     SubscribableList,
     SubscribableResource,
 )
-from envoy_schema.server.schema.sep2.pricing import PrimacyType
+from envoy_schema.server.schema.sep2.types import PrimacyType
 
 
 class DERType(IntEnum):
@@ -180,8 +181,12 @@ class DOESupportedMode(IntFlag):
     OP_MOD_LOAD_LIMIT_W = auto()
 
 
-class VPPSupportedMode(IntFlag):
-    """Bitmap indicating the VPP controls enabled by the device."""
+class VPPControlType(IntFlag):
+    """Bitmap indicating the VPP controls supported by and enabled on the device. Bit positions SHALL be defined as
+    follows:
+    0 - opModStorageTargetW (Storage Target Active Power)
+
+    All other values reserved."""
 
     OP_MOD_STORAGE_TARGET_W = auto()
 
@@ -247,11 +252,9 @@ class DERControlBase(BaseXmlModelWithNS):
     opModLoadLimW: Optional[ActivePower] = element(
         ns="csipaus", default=None
     )  # max limit on charge watts for a single DER
-
-    # Storage extension
     opModStorageTargetW: Optional[ActivePower] = element(
         ns="csipaus", default=None
-    )  # This is a target aggregate output, in Watts, for one or more storage components within an EndDevice.
+    )  # This is a target aggregate output, in Watts, for one or more storage components within an EndDevice
 
 
 class DefaultDERControl(SubscribableIdentifiedObject):
@@ -491,8 +494,8 @@ class DERCapability(Resource):
     # This is an encoded version of DOESupportedMode
     doeModesSupported: primitive_types.HexBinary8 = element(ns="csipaus")
 
-    # Storage Extension (encoded here as it makes decoding a whole lot simpler)
-    # This is an encoded version of VPPSupportedMode
+    # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
+    # This is an encoded version of VPPControlType
     vppModesSupported: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
 
 
@@ -582,11 +585,10 @@ class DERSettings(SubscribableResource):
     # This is an encoded version of DOESupportedMode
     doeModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
 
-    # Storage Extensions
-    # This is an encoded version of VPPSupportedMode
+    # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
+    # This is an encoded version of VPPControlType
     vppModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
-    # Minimum operational value for stored energy in watt hours. This is the value at which the battery will stop
-    # discharging to maintain state of charge above OEM or installer specified reserved minimum.
+
     setMinWh: Optional[WattHour] = element(ns="csipaus", default=None)
 
 
