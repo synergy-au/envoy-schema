@@ -1,3 +1,4 @@
+<!-- NOTE: storage extension beta used but is really v1.3 true with pricing included -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
   elementFormDefault="qualified"
   xmlns="https://csipaus.org/ns/v1.3-beta/storage"
