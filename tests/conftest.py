@@ -13,13 +13,13 @@ class LocalXsdResolver(etree.Resolver):
         if url == "sep.xsd":
             return self.resolve_filename("tests/xsd/sep.xsd", context)
         elif url == "csipaus-core.xsd":
-            return self.resolve_filename("tests/xsd/csipaus-core.xsd", context)
+            return self.resolve_filename("tests/xsd/csipaus-core-v1.2.xsd", context)
         elif url == "csipaus-core-v1.3.xsd":
             return self.resolve_filename("tests/xsd/csipaus-core-v1.3.xsd", context)
         elif url == "csipaus-ext-v1.3.xsd":
             return self.resolve_filename("tests/xsd/csipaus-ext-v1.3.xsd", context)
         elif url == "csipaus-ext.xsd":
-            return self.resolve_filename("tests/xsd/csipaus-ext.xsd", context)
+            return self.resolve_filename("tests/xsd/csipaus-ext-v1.2.xsd", context)
         return None
 
 

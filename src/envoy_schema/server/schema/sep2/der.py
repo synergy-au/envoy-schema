@@ -499,13 +499,8 @@ class DERCapability(Resource):
     # This is an encoded version of DOESupportedMode
     doeModesSupported: primitive_types.HexBinary8 = element(ns="csipaus")
 
-<<<<<<< HEAD
-    # Storage Extension (encoded here as it makes decoding a whole lot simpler)
-    # This is an encoded version of VPPSupportedMode
-=======
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
     # This is an encoded version of VPPControlType
->>>>>>> main
     vppModesSupported: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
 
 
@@ -595,18 +590,10 @@ class DERSettings(SubscribableResource):
     # This is an encoded version of DOESupportedMode
     doeModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
 
-<<<<<<< HEAD
-    # Storage Extensions
-    # This is an encoded version of VPPSupportedMode
-    vppModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
-    # Minimum operational value for stored energy in watt hours. This is the value at which the battery will stop
-    # discharging to maintain state of charge above OEM or installer specified reserved minimum.
-=======
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
     # This is an encoded version of VPPControlType
     vppModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
 
->>>>>>> main
     setMinWh: Optional[WattHour] = element(ns="csipaus", default=None)
 
 
