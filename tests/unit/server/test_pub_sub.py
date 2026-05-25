@@ -136,6 +136,7 @@ def test_notification_encode_resource_DERControlListResponse():
                     "opModExpLimW": {"value": 200, "multiplier": 1},
                     "opModGenLimW": {"value": 300, "multiplier": 1},
                     "opModLoadLimW": {"value": 400, "multiplier": 1},
+                    "opModStorageTargetW": {"value": 500, "multiplier": 1},
                 },
             }
         ],
