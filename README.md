@@ -1,3 +1,9 @@
+# Synergy Forked for Storage Extension BETA
+
+This branch follows largely the csipaus.org/ns/v1.3 branch of bsgip repo. Changes have been made to keep it compatible with the current running of csipaus.org/ns/v1.3-beta/storage by Synergy. 
+The only change that is made is the default namespace where applicable has been altered to be `csipaus.org/ns/v1.3-beta/storage`
+
+
 # envoy-schema
 Public schema for the models/schema associated all envoy API endpoints.
 

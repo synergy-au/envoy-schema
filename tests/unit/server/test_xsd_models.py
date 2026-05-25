@@ -214,7 +214,7 @@ def test_NotificationListResponse_xsd(
     xml = to_xml(entity)
     xml = re.sub('xsi:type="[^"]*"', "", xml)
     assert (
-        '<NotificationList xmlns="urn:ieee:std:2030.5:ns" xmlns:csipaus="https://csipaus.org/ns/v1.3" '
+        '<NotificationList xmlns="urn:ieee:std:2030.5:ns" xmlns:csipaus="https://csipaus.org/ns/v1.3-beta/storage" '
         'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
     ) in xml
     assert "all=" in xml
