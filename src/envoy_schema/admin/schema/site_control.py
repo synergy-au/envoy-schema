@@ -34,6 +34,10 @@ class SiteControlRequest(BaseModel):
         None  # Corresponds to rampTms (None will not encode anything). 100 = 100 seconds
     )
 
+    display_id: Optional[int] = (
+        None  # If set - seed the auto generated MRID with this value. equal display_id means equal mrid
+    )
+
     # Storage extension
     storage_target_watts: Optional[Decimal] = None
 
@@ -62,7 +66,10 @@ class SiteControlGroupRequest(BaseModel):
 
     description: str  # Human readable description (32 char max)
     primacy: int  # Lower = Higher priority. Affects "child" controls relative priority when compared to other groups
-    fsa_id: int = 1  # The function set assignment ID that this SiteControl group will be grouped under
+    fsa_id: Optional[int] = 1  # The function set assignment ID that this SiteControl group will be grouped under
+    display_id: Optional[int] = (
+        None  # If set - seed the auto generated MRID with this value. equal display_id means equal mrid
+    )
 
 
 class SiteControlGroupResponse(SiteControlGroupRequest):
