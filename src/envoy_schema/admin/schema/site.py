@@ -11,11 +11,11 @@ from envoy_schema.server.schema.sep2.der import (
     DERControlType,
     DERType,
     DOESupportedMode,
-    VPPSupportedMode,
     InverterStatusType,
     LocalControlModeStatusType,
     NormalCategoryType,
     OperationalModeStatusType,
+    VPPSupportedMode,
 )
 from envoy_schema.server.schema.sep2.types import DeviceCategory
 
