@@ -41,7 +41,6 @@ from envoy_schema.server.schema.sep2.pricing import (
     TimeTariffIntervalResponse,
 )
 from envoy_schema.server.schema.sep2.primitive_types import (
-    AbsoluteUri,
     HexBinary8,
     HexBinary32,
     HexBinary128,
