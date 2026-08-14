@@ -34,13 +34,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "envoy_schema"
-version = "2.2.0"
+version = "2.5.0"
 description = "Envoy Schema - a collection of pydantic models compatible with the Envoy utility server"
 authors = [{ name = "Battery Storage and Grid Integration Program" }]
 readme = "README.md"
 license = { file = "LICENSE" }
 keywords = ["envoy", "csip-aus", "2030.5", "csip", "pydantic"]
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -52,8 +52,6 @@ classifiers = [
 
     # Specify the Python versions you support here.
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -71,6 +69,7 @@ Homepage = "https://github.com/bsgip/envoy-schema"
 all = ["envoy_schema[dev, test]"]
 dev = ["bandit", "ruff", "ty", "types-python-dateutil", "types-tzlocal", "types-lxml"]
 test = ["pytest", "assertical"]
+build = ["twine"]
 
 [tool.setuptools.package-data]
 "envoy_schema" = ["py.typed"]
