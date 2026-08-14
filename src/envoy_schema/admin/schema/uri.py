@@ -17,20 +17,23 @@ ArchiveForPeriodSites = "/archive/{period_start}/{period_end}/sites"
 ArchiveForPeriodSiteControls = "/archive/{period_start}/{period_end}/site_controls"
 ArchiveForPeriodTariffGeneratedRate = "/archive/{period_start}/{period_end}/tariff_generated_rates"
 
-TariffCreateUri = "/tariff"
+TariffListUri = "/tariff"
 TariffUpdateUri = "/tariff/{tariff_id}"
 TariffComponentCreateUri = "/tariff_component"
 TariffComponentUpdateUri = "/tariff_component/{tariff_component_id}"
 TariffComponentListUri = "/tariff/{tariff_id}/tariff_component"  # Listing tariff components under a tariff
 TariffGeneratedRateCreateUri = "/tariff_generated_rate"
 TariffGeneratedRateUpdateUri = "/tariff_generated_rate/{tariff_generated_rate_id}"
-TariffGeneratedRateRangeUri = (
-    "/tariff_component/{tariff_component_id}/tariff_generated_rate/{period_start}/{period_end}"  # noqa: E501
+TariffGeneratedRateListUri = (
+    "/tariff_component/{tariff_component_id}/tariff_generated_rate"  # Listing rates under a component
 )
 SiteListUri = "/site"
 SiteUri = "/site/{site_id}"  # Supports updating/deleting single sites
-SiteGroupUri = "/site_group/{group_name}"
 SiteGroupListUri = "/site_group"
+SiteGroupUri = "/site_group/{group_name}"
+SiteGroupAssignmentsListUri = "/site_group/{group_name}/assignments"
+SiteGroupAssignmentsUri = "/site_group/{group_name}/assignments/{site_group_assignment_id}"
+
 CSIPAusSiteReadingUri = "/site_readings/{site_id}/csip_aus_unit/{unit_enum}/period/{period_start}/{period_end}"
 CalculationLogCreateUri = "/calculation_log"
 CalculationLogUri = "/calculation_log/{calculation_log_id}"

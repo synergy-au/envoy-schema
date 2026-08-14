@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2.event import RandomizableEvent
@@ -20,13 +18,13 @@ class TariffProfileResponse(IdentifiedObject, tag="TariffProfile"):
     """A schedule of charges; structure that allows the definition of tariff structures such as step (block) and
     time of use (tier) when used in conjunction with TimeTariffInterval and ConsumptionTariffInterval."""
 
-    currency: Optional[CurrencyCode] = element(default=None)
-    pricePowerOfTenMultiplier: Optional[int] = element(default=None)
+    currency: CurrencyCode | None = element(default=None)
+    pricePowerOfTenMultiplier: int | None = element(default=None)
     primacyType: int = element(
         default=None, tag="primacy"
     )  # Should map to sep2.types.PrimacyType - left as integer to allow deployments with broader values
-    rateCode: Optional[str] = element(default=None)
-    RateComponentListLink: Optional[ListLink] = element(default=None)
+    rateCode: str | None = element(default=None)
+    RateComponentListLink: ListLink | None = element(default=None)
     serviceCategoryKind: ServiceKind = element()
     CombinedTimeTariffIntervalListLink: ListLink = element(ns="csipaus")  # csipaus extension
 
@@ -35,9 +33,9 @@ class RateComponentResponse(IdentifiedObject, tag="RateComponent"):
     """Specifies the applicable charges for a single component of the rate, which could be generation price or
     consumption price, for example."""
 
-    ActiveTimeTariffIntervalListLink: Optional[ListLink] = element(default=None)
-    flowRateEndLimit: Optional[UnitValueType] = element(default=None)
-    flowRateStartLimit: Optional[UnitValueType] = element(default=None)
+    ActiveTimeTariffIntervalListLink: ListLink | None = element(default=None)
+    flowRateEndLimit: UnitValueType | None = element(default=None)
+    flowRateStartLimit: UnitValueType | None = element(default=None)
     ReadingTypeLink: Link = element()
     roleFlags: HexBinary16 = element()  # See RoleFlagsType
 
@@ -52,23 +50,21 @@ class ConsumptionTariffIntervalResponse(Resource, tag="ConsumptionTariffInterval
     within one of the previous blocks."""
 
     consumptionBlock: ConsumptionBlockType = element()
-    price: Optional[int] = element(
-        default=None
-    )  # The charge for this rate component, per unit of measure defined by the
+    price: int | None = element(default=None)  # The charge for this rate component, per unit of measure defined by the
     # associated ReadingType, in currency specified in TariffProfile.  # noqa e114
     startValue: int = element()  # The lowest level of consumption that defines the starting point of this consumption
     # step or block. Thresholds start at zero for each billing period. # noqa e114
 
 
 class ConsumptionTariffIntervalListResponse(SepList, tag="ConsumptionTariffIntervalList"):
-    ConsumptionTariffInterval: Optional[list[ConsumptionTariffIntervalResponse]] = element(default=None)
+    ConsumptionTariffInterval: list[ConsumptionTariffIntervalResponse] | None = element(default=None)
 
 
 class ConsumptionTariffIntervalListSummaryResponse(SepList, tag="ConsumptionTariffIntervalListSummary", ns="csipaus"):
     """A list extension to allow clients to retrieve ConsumptionTariffInterval information without making a request
     against the ConsumptionTariffIntervalList resource"""
 
-    ConsumptionTariffInterval: Optional[list[ConsumptionTariffIntervalResponse]] = element(default=None, ns="")
+    ConsumptionTariffInterval: list[ConsumptionTariffIntervalResponse] | None = element(default=None, ns="")
 
 
 class TimeTariffIntervalResponse(RandomizableEvent, tag="TimeTariffInterval"):
@@ -82,14 +78,14 @@ class TimeTariffIntervalResponse(RandomizableEvent, tag="TimeTariffInterval"):
 
 
 class TariffProfileListResponse(SubscribableList, tag="TariffProfileList"):
-    pollRate: Optional[int] = attr(default=DEFAULT_POLLRATE_SECONDS)
-    TariffProfile: Optional[list[TariffProfileResponse]] = element(default=None)
+    pollRate: int | None = attr(default=DEFAULT_POLLRATE_SECONDS)
+    TariffProfile: list[TariffProfileResponse] | None = element(default=None)
 
 
 class RateComponentListResponse(SubscribableList, tag="RateComponentList"):
-    RateComponent: Optional[list[RateComponentResponse]] = element(default=None)
+    RateComponent: list[RateComponentResponse] | None = element(default=None)
 
 
 class TimeTariffIntervalListResponse(SubscribableList, tag="TimeTariffIntervalList"):
-    pollRate: Optional[int] = attr(default=DEFAULT_POLLRATE_SECONDS)
-    TimeTariffInterval: Optional[list[TimeTariffIntervalResponse]] = element(default=None)
+    pollRate: int | None = attr(default=DEFAULT_POLLRATE_SECONDS)
+    TimeTariffInterval: list[TimeTariffIntervalResponse] | None = element(default=None)
